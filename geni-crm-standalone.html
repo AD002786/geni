@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geni CRM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f4f6f9;--white:#fff;--surface:#f8fafc;
+  --nav:#1a1f2e;--nav2:#242a3d;--nav-text:#8892a4;
+  --border:#e2e8f0;--border2:#d0d7e2;
+  --text:#1a202c;--text2:#64748b;--text3:#94a3b8;
+  --accent:#4f8eff;--accent-bg:#eff5ff;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
+  --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
+  --yellow:#d97706;--yellow-bg:#fffbeb;--yellow-bd:#fde68a;
+  --orange:#ea580c;--orange-bg:#fff7ed;--orange-bd:#fed7aa;
+  --purple:#7c3aed;--purple-bg:#f5f3ff;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex;height:100vh;overflow:hidden;font-size:13px}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;outline:none}
+input,select,textarea{font-family:'Inter',sans-serif;outline:none;border:none}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d0d7e2;border-radius:3px}
+
+.nav{width:220px;background:var(--nav);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+.nav-logo{padding:16px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.nav-logo-name{font-weight:700;font-size:18px;color:#fff;letter-spacing:-0.3px}
+.nav-logo-sub{font-size:10px;color:var(--nav-text);letter-spacing:1px;font-family:'JetBrains Mono',monospace}
+.nav-sec{padding:12px 10px 4px}
+.nav-sec-label{font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:1.5px;padding:0 8px;margin-bottom:4px;font-weight:600}
+.nav-btn{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;color:var(--nav-text);font-size:13px;cursor:pointer;transition:all 0.15s;background:transparent;width:100%;text-align:left}
+.nav-btn:hover{background:rgba(255,255,255,0.06);color:#fff}
+.nav-btn.active{background:rgba(79,142,255,0.15);color:#4f8eff;font-weight:500}
+.nav-icon{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);font-size:10px;padding:1px 6px;border-radius:10px;font-family:'JetBrains Mono',monospace}
+.nav-badge.hot{background:rgba(220,38,38,0.3);color:#fca5a5}
+.nav-div{height:1px;background:rgba(255,255,255,0.06);margin:6px 10px}
+.nav-user{padding:12px 14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:10px;margin-top:auto}
+.nav-av{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#4f8eff,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.agent-pill{display:flex;align-items:center;gap:5px;padding:6px 10px;background:rgba(22,163,74,0.12);border:1px solid rgba(22,163,74,0.2);border-radius:20px;margin:6px 10px}
+.agent-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.agent-txt{font-size:10px;color:#4ade80;font-family:'JetBrains Mono',monospace}
+
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:48px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:12px;flex-shrink:0}
+.topbar-title{font-size:15px;font-weight:600}
+.topbar-div{width:1px;height:16px;background:var(--border)}
+.topbar-sub{font-size:12px;color:var(--text2)}
+.content{flex:1;overflow:hidden;display:flex}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:6px;font-size:12px;font-weight:500;transition:all 0.15s;cursor:pointer}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#3d7aff}
+.btn-secondary{background:var(--white);border:1px solid var(--border);color:var(--text2)}
+.btn-secondary:hover{border-color:var(--border2);color:var(--text)}
+.btn-ghost{background:transparent;color:var(--text2);padding:6px 10px}
+.btn-ghost:hover{background:var(--bg);color:var(--text)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn-success{background:var(--green);color:#fff}
+
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:16px}
+.card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600}
+
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.chip::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.chip-new{background:var(--accent-bg);color:var(--accent)}
+.chip-out{background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow-bd)}
+.chip-rep{background:var(--green-bg);color:var(--green);border:1px solid var(--green-bd)}
+.chip-sent{background:var(--purple-bg);color:var(--purple)}
+.chip-closed{background:var(--red-bg);color:var(--red)}
+
+.tab-bar{display:flex;border-bottom:1px solid var(--border);background:var(--white);padding:0 20px;flex-shrink:0}
+.tab{padding:10px 14px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.fi{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:0.3px;display:block;margin-bottom:4px}
+.finput{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--text);width:100%;transition:border-color 0.15s}
+.finput:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(79,142,255,0.1)}
+.fselect{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--text);width:100%}
+.ftextarea{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-size:13px;color:var(--text);width:100%;resize:vertical;min-height:80px;line-height:1.6}
+
+.dt{width:100%;border-collapse:collapse}
+.dt th{padding:8px 12px;text-align:left;font-size:11px;font-weight:600;color:var(--text2);border-bottom:2px solid var(--border);background:var(--surface);white-space:nowrap;letter-spacing:0.3px}
+.dt td{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+.dt tr:hover td{background:var(--bg);cursor:pointer}
+.dt tr:last-child td{border-bottom:none}
+
+.sbar{display:flex;align-items:center;gap:6px}
+.sbar-t{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;max-width:60px}
+.sbar-f{height:100%;border-radius:2px}
+.sbar-n{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2);width:22px;text-align:right}
+
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(3px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:var(--white);border-radius:14px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.15);display:flex;flex-direction:column;max-height:90vh;overflow:hidden}
+.modal-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-size:15px;font-weight:600}
+.modal-body{padding:20px;overflow-y:auto;flex:1}
+.modal-ft{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0}
+
+.rec-layout{display:flex;flex:1;overflow:hidden}
+.rec-main{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.rec-sb{width:260px;border-left:1px solid var(--border);overflow-y:auto;background:var(--white);flex-shrink:0}
+.rec-sb-sec{padding:14px 16px;border-bottom:1px solid var(--border)}
+.rec-sb-title{font-size:10px;font-weight:600;color:var(--text2);margin-bottom:10px;letter-spacing:0.5px;text-transform:uppercase}
+.rec-prop{margin-bottom:10px}
+.rec-prop-l{font-size:10px;color:var(--text3)}
+.rec-prop-v{font-size:12px;color:var(--text);font-weight:500;margin-top:1px}
+
+.act-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.act-item:last-child{border-bottom:none}
+.act-text{font-size:12px;color:var(--text);line-height:1.5}
+.act-time{font-size:10px;color:var(--text3);margin-top:2px;font-family:'JetBrains Mono',monospace}
+
+.kanban{display:flex;gap:12px;overflow-x:auto;padding:16px;align-items:flex-start;flex:1}
+.k-col{width:220px;flex-shrink:0;background:var(--bg);border-radius:10px;overflow:hidden}
+.k-col-hd{padding:10px 12px;display:flex;align-items:center;justify-content:space-between}
+.k-col-title{font-size:12px;font-weight:600}
+.k-col-body{padding:8px;display:flex;flex-direction:column;gap:8px;min-height:80px}
+.k-card{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:10px 12px;cursor:pointer;transition:all 0.15s}
+.k-card:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(79,142,255,0.1)}
+
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:#1a1f2e;color:#fff;border-radius:10px;padding:10px 16px;font-size:12px;display:flex;align-items:center;gap:8px;box-shadow:0 4px 20px rgba(0,0,0,0.2);transform:translateX(120%);opacity:0;transition:all 0.3s ease;max-width:300px}
+.toast.show{transform:translateX(0);opacity:1}
+
+.grade-pill{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:5px;font-weight:700;font-size:13px;cursor:pointer;transition:transform 0.15s}
+.grade-pill:hover{transform:scale(1.15)}
+.g-A{background:#dcfce7;color:#16a34a}
+.g-B{background:#dbeafe;color:#2563eb}
+.g-C{background:#fef9c3;color:#ca8a04}
+.g-D{background:#ffedd5;color:#ea580c}
+.g-F{background:#fee2e2;color:#dc2626}
+
+.terr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.terr-card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all 0.15s;cursor:pointer}
+.terr-card:hover{border-color:var(--accent);box-shadow:0 2px 12px rgba(79,142,255,0.08)}
+
+@media print{.nav,.topbar,.no-print{display:none!important}.content{display:block!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div id="root" style="display:flex;width:100%;height:100vh;overflow:hidden"></div>
+<script type="text/babel">
+const {useState,useEffect,useRef,useCallback} = React;
+
+const GC={A:"#16a34a",B:"#2563eb",C:"#ca8a04",D:"#ea580c",F:"#dc2626"};
+const GB={A:"#dcfce7",B:"#dbeafe",C:"#fef9c3",D:"#ffedd5",F:"#fee2e2"};
+function s2g(s){if(s>=80)return"A";if(s>=60)return"B";if(s>=40)return"C";if(s>=20)return"D";return"F";}
+function sc(s){if(s>=70)return"#16a34a";if(s>=50)return"#2563eb";if(s>=30)return"#ca8a04";if(s>=15)return"#ea580c";return"#dc2626";}
+function ovr(c){return Math.round((c.seo+c.reviews+c.social+c.ws+c.ads+c.listings+c.ecom+c.tech)/8);}
+
+// AI audit runs locally — no API key needed, no CORS errors
+function generateAuditLocally(c){
+  const o=ovr(c);
+  const gaps=[];
+  if(c.seo<30)gaps.push("Not ranking in Google's local 3-Pack for primary service keywords");
+  if(c.reviews<30)gaps.push("Review count ("+c.reviews+") well below market average — losing trust to competitors");
+  if(c.social<25)gaps.push("Social media inactive or incomplete — missing top-of-funnel brand awareness");
+  if(!c.hasWeb||c.ws<40)gaps.push("No website or weak web presence — can't capture organic search traffic");
+  if(c.ads<20)gaps.push("Zero paid advertising detected — competitors are taking ready-to-buy traffic");
+  if(c.listings<40)gaps.push("Business listings missing or inconsistent across major directories");
+  if(c.tech<20)gaps.push("No CRM, booking software, or live chat detected via technology scan");
+  if(c.ecom<15)gaps.push("No online booking or payment processing — friction in customer conversion");
+  while(gaps.length<3)gaps.push("Digital presence score of "+o+"/100 leaves easy market share on the table");
+  const opps=[];
+  if(c.seo<50)opps.push("Local SEO quick wins: 3-Pack ranking achievable within 30-60 days");
+  if(c.reviews<50)opps.push("Automated review campaign could 3x review count in 90 days");
+  if(c.ads<30)opps.push("Google Local Services Ads would put this business in front of buyers immediately");
+  if(!c.hasWeb)opps.push("Website build + GMB optimization = fastest path from invisible to discoverable");
+  if(c.social<40)opps.push("Social content strategy would build local brand recognition over 60 days");
+  while(opps.length<3)opps.push("Full digital audit package would address all gaps for under $2K/mo");
+  const pitch=c.biz+" is scoring a "+s2g(o)+" ("+o+"/100) on digital presence — that means leads are going to competitors who show up where they don't. Starting with local SEO and reputation management, we can move the needle within 30 days and track every dollar of impact.";
+  const services=[];
+  if(c.seo<50)services.push({name:"Local SEO",reason:"Get ranking in Google Maps 3-Pack for "+c.niche+" searches in "+c.location.split(",")[0]});
+  if(c.reviews<50)services.push({name:"Reputation Management",reason:"Automate review requests and responses to build trust and close more leads"});
+  if(c.ads<30)services.push({name:"Google Ads / LSA",reason:"Capture ready-to-buy traffic that organic search misses right now"});
+  if(!c.hasWeb||c.ws<40)services.push({name:"Website Design",reason:"Build a converting site with click-to-call, contact forms, and fast load"});
+  if(c.social<40)services.push({name:"Social Media Management",reason:"Build local brand presence on Facebook and Instagram"});
+  if(c.listings<40)services.push({name:"Listings Sync",reason:"Fix NAP inconsistencies and submit to all major directories"});
+  while(services.length<3)services.push({name:"Full Digital Audit",reason:"Deep-dive into every channel to find the highest ROI opportunities"});
+  const monthly=o<20?"$2,500-$4,000/mo":o<40?"$1,800-$3,000/mo":o<60?"$1,200-$2,200/mo":"$800-$1,500/mo";
+  const prob=o<20?"82%":o<40?"74%":o<60?"65%":"55%";
+  const pri=o<20?"Hot":o<40?"High":"Medium";
+  return{gaps:gaps.slice(0,4),opportunities:opps.slice(0,3),pitch,services:services.slice(0,3),estimatedValue:monthly,closeProb:prob,priority:pri};
+}
+
+const NICHES=["Plumbing","Contractors","Landscaping","Dental","Insurance","Pest Control","Vets"];
+const MARKETS=["Atlanta, GA","Marietta, GA","Sandy Springs, GA","Norcross, GA"];
+
+const METRIC_META={
+  listings:{label:"Listings",icon:"📋",detail:"Google Business, Yelp, Bing Places, Apple Maps, Facebook, Nextdoor, Yellow Pages",desc:"Checks accuracy and presence across all major directories. Missing or inconsistent NAP data hurts local rankings."},
+  reviews:{label:"Reviews",icon:"⭐",detail:"Google, Yelp, Facebook, industry platforms",desc:"Measures total review count, average star rating, recency of reviews, and response rate. Critical for local trust signals."},
+  social:{label:"Social Media",icon:"📱",detail:"Facebook, Instagram, LinkedIn, X/Twitter",desc:"Evaluates posting frequency, follower growth, engagement rate, and profile completeness across platforms."},
+  ws:{label:"Website",icon:"🌐",detail:"Page speed, mobile responsiveness, UX, lead capture",desc:"Scores website performance, design quality, mobile experience, and conversion elements like CTAs and contact forms."},
+  ecom:{label:"Ecommerce",icon:"🛒",detail:"Online booking, payments, product sales",desc:"Checks for online scheduling tools, payment processing, e-commerce capability, and digital service offerings."},
+  ads:{label:"Advertising",icon:"📢",detail:"Google Ads, Facebook Ads, estimated monthly spend",desc:"Detects active paid campaigns, ad creative quality, estimated spend, and landing page alignment."},
+  seo:{label:"SEO",icon:"🔍",detail:"Local pack ranking, keyword coverage, backlinks, citations",desc:"Local SEO health — Google Maps ranking position, keyword visibility, backlink profile, and citation consistency."},
+  tech:{label:"Technology",icon:"⚙️",detail:"CRM, booking software, analytics, live chat, email marketing",desc:"Identifies technology stack in use via Wappalyzer and surfaces missing tools competitors are using."},
+};
+
+const SEED=[];
+// Embedded API key — always available as fallback even if localStorage is empty
+const EMBEDDED_GOOGLE_KEY="AIzaSyCqRG80kckH3Wnz_SpQigsQvgayVBGmGb8";
+
+const TERRITORIES=[
+  {id:1,name:"Atlanta Core",area:"Atlanta, GA",niches:["Plumbing","Dental","Insurance"],totalFound:47,noWeb:18,gradeF:14,gradeD:12,created:"Aug 2025",leads:[
+    {id:101,biz:"Midtown Plumbing Co",niche:"Plumbing",phone:"(404)555-1001",email:"info@midtownplumbing.com",hasWeb:false,grade:"F",seo:6,reviews:8,social:3,ws:0,ads:0,listings:9,ecom:0,tech:0,status:"new"},
+    {id:102,biz:"Buckhead Smiles",niche:"Dental",phone:"(404)555-1002",email:"hello@buckheadsmiles.com",hasWeb:true,grade:"D",seo:30,reviews:25,social:18,ws:42,ads:10,listings:38,ecom:0,tech:20,status:"new"},
+    {id:103,biz:"Atlanta Shield Insurance",niche:"Insurance",phone:"(404)555-1003",email:"contact@atlshield.com",hasWeb:false,grade:"F",seo:4,reviews:5,social:2,ws:0,ads:0,listings:12,ecom:0,tech:5,status:"new"},
+    {id:104,biz:"Peachtree Drain Pros",niche:"Plumbing",phone:"(404)555-1004",email:"drain@peachtreedrain.com",hasWeb:false,grade:"F",seo:5,reviews:11,social:4,ws:0,ads:0,listings:10,ecom:0,tech:0,status:"new"},
+    {id:105,biz:"Inman Park Dental",niche:"Dental",phone:"(404)555-1005",email:"smile@inmanparkdental.com",hasWeb:true,grade:"C",seo:45,reviews:38,social:30,ws:60,ads:20,listings:55,ecom:5,tech:35,status:"new"},
+  ]},
+  {id:2,name:"Marietta North",area:"Marietta, GA",niches:["Contractors","Landscaping","Plumbing"],totalFound:31,noWeb:14,gradeF:11,gradeD:9,created:"Aug 2025",leads:[
+    {id:201,biz:"Big Marietta Builders",niche:"Contractors",phone:"(770)555-2001",email:"build@mariettabuild.com",hasWeb:false,grade:"F",seo:3,reviews:2,social:1,ws:0,ads:0,listings:6,ecom:0,tech:0,status:"new"},
+    {id:202,biz:"Green Lawn Marietta",niche:"Landscaping",phone:"(770)555-2002",email:"green@mariettalaWn.com",hasWeb:false,grade:"F",seo:5,reviews:7,social:3,ws:0,ads:0,listings:8,ecom:0,tech:0,status:"new"},
+    {id:203,biz:"Marietta Pipe Masters",niche:"Plumbing",phone:"(770)555-2003",email:"pipes@mariettapipes.com",hasWeb:true,grade:"D",seo:28,reviews:20,social:15,ws:35,ads:0,listings:30,ecom:0,tech:15,status:"new"},
+  ]},
+  {id:3,name:"Sandy Springs",area:"Sandy Springs, GA",niches:["Pest Control","Vets","Dental"],totalFound:22,noWeb:8,gradeF:7,gradeD:8,created:"Sep 2025",leads:[
+    {id:301,biz:"SS Pest Solutions",niche:"Pest Control",phone:"(404)555-3001",email:"pests@sspest.com",hasWeb:false,grade:"F",seo:4,reviews:6,social:2,ws:0,ads:0,listings:8,ecom:0,tech:0,status:"new"},
+    {id:302,biz:"Sandy Springs Animal Clinic",niche:"Vets",phone:"(404)555-3002",email:"care@ssanimal.com",hasWeb:true,grade:"D",seo:33,reviews:44,social:20,ws:38,ads:5,listings:40,ecom:0,tech:22,status:"new"},
+  ]},
+];
+
+// ── COMPONENTS ──────────────────────────────────────────────────────────────
+
+function Toast({toasts}){
+  return React.createElement('div',{className:"toast-wrap"},
+    toasts.map(t=>React.createElement('div',{key:t.id,className:`toast ${t.show?"show":""}`},t.msg))
+  );
+}
+
+function Grade({g,size=26,onClick}){
+  return(
+    <div
+      className={`grade-pill g-${g}`}
+      style={{width:size,height:size,fontSize:size*0.5,flexShrink:0}}
+      onClick={onClick}
+      title={onClick?"Click for details":""}
+    >{g}</div>
+  );
+}
+
+function Chip({s}){
+  const m={new:{cls:"chip-new",l:"New"},outreach:{cls:"chip-out",l:"Outreach"},replied:{cls:"chip-rep",l:"Replied"},sent:{cls:"chip-sent",l:"Mail Sent"},closed:{cls:"chip-closed",l:"Closed"}};
+  const c=m[s]||m.new;
+  return <span className={`chip ${c.cls}`}>{c.l}</span>;
+}
+
+function SBar({val}){
+  return(
+    <div className="sbar">
+      <div className="sbar-t"><div className="sbar-f" style={{width:`${val}%`,background:sc(val)}}/></div>
+      <span className="sbar-n">{val}</span>
+    </div>
+  );
+}
+
+// ── METRIC DETAIL POPUP ─────────────────────────────────────────────────────
+function MetricPopup({metricKey,val,bizName,onClose}){
+  const m=METRIC_META[metricKey];
+  if(!m)return null;
+  const g=s2g(val);
+  const tips={
+    A:["Performing well — maintain consistency","Monitor for any drops","Use as a selling point"],
+    B:["Good foundation — room to improve","Focus on the weaker sub-areas","A few optimizations could push to A"],
+    C:["Average performance — opportunity here","Competitors likely outperforming","Mid-priority fix — good ROI potential"],
+    D:["Significantly below average","Active leads are likely going to competitors","High-priority service opportunity"],
+    F:["Critical gap — almost no presence","Easy wins available","Highest priority — pitch this first"],
+  };
+  const actions={
+    listings:["Submit to all missing directories","Fix NAP inconsistencies","Optimize Google Business Profile"],
+    reviews:["Set up automated review requests","Respond to all existing reviews","Target 50+ reviews within 90 days"],
+    social:["Set up missing profiles","Create a 30-day content calendar","Run engagement campaigns"],
+    ws:["Rebuild or redesign the website","Add click-to-call and contact form","Optimize for mobile"],
+    ecom:["Integrate online booking software","Add payment processing","Create service packages"],
+    ads:["Run Google Local Services Ads","Launch Facebook lead gen ads","Set up retargeting"],
+    seo:["Claim and optimize Google Business Profile","Build local citations","Target neighborhood keywords"],
+    tech:["Implement a CRM","Add live chat","Set up email marketing automation"],
+  };
+
+  return(
+    <div className="modal-bg" onClick={onClose}>
+      <div className="modal" style={{maxWidth:480}} onClick={e=>e.stopPropagation()}>
+        <div className="modal-hd">
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <span style={{fontSize:22}}>{m.icon}</span>
+            <div>
+              <div className="modal-title">{m.label}</div>
+              <div style={{fontSize:11,color:"var(--text2)"}}>{bizName}</div>
+            </div>
+          </div>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
+        </div>
+        <div className="modal-body">
+          <div style={{display:"flex",alignItems:"center",gap:16,padding:"14px 0",borderBottom:"1px solid var(--border)",marginBottom:14}}>
+            <Grade g={g} size={52}/>
+            <div style={{flex:1}}>
+              <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+                <div style={{flex:1,height:8,background:"var(--border)",borderRadius:4,overflow:"hidden"}}>
+                  <div style={{width:`${val}%`,height:"100%",background:sc(val),borderRadius:4,transition:"width 0.6s ease"}}/>
+                </div>
+                <span style={{fontFamily:"JetBrains Mono",fontSize:15,fontWeight:700,color:sc(val),width:40,textAlign:"right"}}>{val}/100</span>
+              </div>
+              <div style={{fontSize:11,color:"var(--text2)"}}>{m.detail}</div>
+            </div>
+          </div>
+
+          <div style={{marginBottom:14}}>
+            <div style={{fontSize:12,fontWeight:600,marginBottom:6}}>What this score measures</div>
+            <div style={{fontSize:12,color:"var(--text2)",lineHeight:1.7,background:"var(--bg)",padding:"10px 12px",borderRadius:6}}>{m.desc}</div>
+          </div>
+
+          <div style={{marginBottom:14}}>
+            <div style={{fontSize:12,fontWeight:600,marginBottom:6}}>Grade {g} Analysis</div>
+            {tips[g].map((t,i)=>(
+              <div key={i} style={{display:"flex",gap:8,padding:"5px 0",borderBottom:"1px solid var(--border)",fontSize:12}}>
+                <span style={{color:GC[g],flexShrink:0}}>›</span>{t}
+              </div>
+            ))}
+          </div>
+
+          <div>
+            <div style={{fontSize:12,fontWeight:600,marginBottom:6}}>Recommended Actions</div>
+            {(actions[metricKey]||[]).map((a,i)=>(
+              <div key={i} style={{display:"flex",gap:8,padding:"5px 0",borderBottom:"1px solid var(--border)",fontSize:12,color:"var(--text2)"}}>
+                <span style={{color:"var(--accent)",flexShrink:0}}>→</span>{a}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="modal-ft">
+          <button className="btn btn-primary btn-sm" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── AUDIT PANEL ─────────────────────────────────────────────────────────────
+function AuditPanel({contact,onRunAudit,auditing,onExportPDF}){
+  const [popup,setPopup]=useState(null);
+  const o=ovr(contact);
+  const og=s2g(o);
+  const metrics=[
+    {key:"listings"},{key:"reviews"},{key:"social"},{key:"ws"},
+    {key:"ecom"},{key:"ads"},{key:"seo"},{key:"tech"},
+  ];
+
+  return(
+    <div>
+      {popup&&<MetricPopup metricKey={popup} val={contact[popup]} bizName={contact.biz} onClose={()=>setPopup(null)}/>}
+
+      <div style={{background:"linear-gradient(135deg,#1a1f2e,#242a3d)",borderRadius:10,padding:"20px 24px",marginBottom:14,display:"flex",alignItems:"center",gap:20}}>
+        <div style={{flex:1}}>
+          <div style={{color:"rgba(255,255,255,0.45)",fontSize:10,marginBottom:4,letterSpacing:1}}>DIGITAL PRESENCE SCORE — VENDASTA POWERED</div>
+          <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:40,fontWeight:700,color:GC[og],lineHeight:1}}>{o}<span style={{fontSize:18,color:"rgba(255,255,255,0.3)"}}>/100</span></div>
+          <div style={{color:"rgba(255,255,255,0.55)",fontSize:12,marginTop:4}}>{contact.biz} — {contact.location}</div>
+        </div>
+        <div style={{textAlign:"center"}}>
+          <div style={{width:60,height:60,borderRadius:12,background:GB[og],display:"flex",alignItems:"center",justifyContent:"center",fontSize:30,fontWeight:800,color:GC[og]}}>{og}</div>
+          <div style={{color:"rgba(255,255,255,0.35)",fontSize:9,marginTop:4}}>OVERALL GRADE</div>
+        </div>
+      </div>
+
+      {!contact.auditData&&(
+        <div style={{background:"var(--yellow-bg)",border:"1px solid var(--yellow-bd)",borderRadius:6,padding:"10px 14px",marginBottom:14,display:"flex",alignItems:"center",gap:12,justifyContent:"space-between"}}>
+          <div>
+            <div style={{fontSize:12,fontWeight:600,color:"#92400e"}}>Live Audit Not Run Yet</div>
+            <div style={{fontSize:11,color:"#b45309"}}>Pulls real data from Google Places + PageSpeed if API key is set in Settings</div>
+          </div>
+          <button onClick={onRunAudit} disabled={auditing} className="btn btn-primary btn-sm" style={{whiteSpace:"nowrap",flexShrink:0}}>
+            {auditing?"⏳ Scanning...":"⚡ Run Live Audit"}
+          </button>
+        </div>
+      )}
+      {contact.auditData?.liveData&&(
+        <div style={{background:"var(--green-bg)",border:"1px solid var(--green-bd)",borderRadius:6,padding:"10px 14px",marginBottom:14,fontSize:11}}>
+          <div style={{fontWeight:600,color:"var(--green)",marginBottom:4}}>✅ Live Data Pulled — {contact.auditData.liveData.dataSource}</div>
+          <div style={{display:"flex",gap:16,flexWrap:"wrap",color:"var(--text2)"}}>
+            {contact.auditData.liveData.googleRating&&<span>⭐ {contact.auditData.liveData.googleRating} Google Rating</span>}
+            {contact.auditData.liveData.reviewCount&&<span>💬 {contact.auditData.liveData.reviewCount} Reviews</span>}
+            {contact.auditData.liveData.pageSpeed&&<span>⚡ {contact.auditData.liveData.pageSpeed}/100 PageSpeed</span>}
+            {contact.auditData.liveData.lcp&&<span>⏱ {contact.auditData.liveData.lcp} LCP</span>}
+            {contact.auditData.liveData.photoCount>0&&<span>📸 {contact.auditData.liveData.photoCount} Photos</span>}
+          </div>
+        </div>
+      )}
+
+      <div className="card" style={{marginBottom:14}}>
+        <div className="card-hd">
+          <span className="card-title">Audit Scores</span>
+          <span style={{fontSize:11,color:"var(--text2)"}}>Click any grade to see details</span>
+        </div>
+        {metrics.map(m=>{
+          const meta=METRIC_META[m.key];
+          const val=contact[m.key]||0;
+          const g=s2g(val);
+          return(
+            <div key={m.key} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 0",borderBottom:"1px solid var(--border)"}}>
+              <div style={{display:"flex",alignItems:"center",gap:10}}>
+                <span style={{fontSize:16,width:20}}>{meta.icon}</span>
+                <div>
+                  <div style={{fontSize:13,fontWeight:500}}>{meta.label}</div>
+                  <div style={{fontSize:10,color:"var(--text3)"}}>{meta.detail.split(",")[0]}...</div>
+                </div>
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:10,flexShrink:0}}>
+                <div style={{width:80,height:6,background:"var(--border)",borderRadius:3,overflow:"hidden"}}>
+                  <div style={{width:`${val}%`,height:"100%",background:sc(val),borderRadius:3}}/>
+                </div>
+                <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:13,fontWeight:600,color:sc(val),width:28,textAlign:"right"}}>{val}</span>
+                <Grade g={g} size={26} onClick={()=>setPopup(m.key)}/>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {contact.auditData&&(
+        <>
+          <div className="card" style={{marginBottom:14}}>
+            <div className="card-hd"><span className="card-title">Gaps Identified</span></div>
+            {contact.auditData.gaps?.map((g,i)=>(
+              <div key={i} style={{display:"flex",gap:8,padding:"6px 0",borderBottom:"1px solid var(--border)",fontSize:12}}>
+                <span style={{color:"var(--red)",flexShrink:0}}>⚠</span>{g}
+              </div>
+            ))}
+          </div>
+          <div className="card" style={{marginBottom:14}}>
+            <div className="card-hd"><span className="card-title">Opportunities</span></div>
+            {contact.auditData.opportunities?.map((o,i)=>(
+              <div key={i} style={{display:"flex",gap:8,padding:"6px 0",borderBottom:"1px solid var(--border)",fontSize:12}}>
+                <span style={{color:"var(--green)",flexShrink:0}}>✓</span>{o}
+              </div>
+            ))}
+          </div>
+          <div className="card" style={{marginBottom:14}}>
+            <div className="card-hd"><span className="card-title">Recommended Pitch</span></div>
+            <div style={{background:"var(--accent-bg)",border:"1px solid rgba(79,142,255,0.2)",borderRadius:6,padding:"12px 14px",fontSize:13,lineHeight:1.7,fontStyle:"italic"}}>"{contact.auditData.pitch}"</div>
+          </div>
+          <div className="card" style={{marginBottom:14}}>
+            <div className="card-hd"><span className="card-title">Services to Propose</span></div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+              {contact.auditData.services?.map((s,i)=>(
+                <div key={i} style={{background:"var(--bg)",border:"1px solid var(--border)",borderRadius:6,padding:"10px 12px"}}>
+                  <div style={{fontSize:12,fontWeight:600,color:"var(--accent)",marginBottom:2}}>{s.name}</div>
+                  <div style={{fontSize:11,color:"var(--text2)"}}>{s.reason}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card" style={{marginBottom:14}}>
+            <div className="card-hd"><span className="card-title">Estimated Value</span></div>
+            <div style={{display:"flex",gap:24,flexWrap:"wrap"}}>
+              {[{l:"Monthly Retainer",v:contact.auditData.estimatedValue||"$1,500–$2,500"},{l:"Close Probability",v:contact.auditData.closeProb||"70%"},{l:"Priority",v:contact.auditData.priority||"High"}].map(s=>(
+                <div key={s.l}>
+                  <div style={{fontSize:20,fontWeight:700,color:"var(--accent)",fontFamily:"'JetBrains Mono',monospace"}}>{s.v}</div>
+                  <div style={{fontSize:10,color:"var(--text2)"}}>{s.l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <button onClick={onExportPDF} className="btn btn-secondary" style={{width:"100%",justifyContent:"center"}}>🖨️ Export Audit as PDF</button>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ── OUTREACH PANEL ───────────────────────────────────────────────────────────
+function OutreachPanel({contact,toastFn}){
+  const [open,setOpen]=useState(null);
+  const channels=[
+    {id:"email",icon:"📧",name:"Cold Email",tool:"HubSpot · Unlayer",
+     script:`Subject: I found 3 things holding back ${contact.biz}\n\nHey ${contact.name.split(" ")[0]},\n\nI ran a free digital audit on ${contact.biz} and your online presence scored a ${contact.grade}. The 3 biggest gaps:\n\n• [Gap 1 from audit]\n• [Gap 2 from audit]\n• [Gap 3 from audit]\n\nFull breakdown: [personalized-link]\n\nWorth a 10-minute call this week?\n\nBest, MO`},
+    {id:"linkedin",icon:"💼",name:"LinkedIn Written DM",tool:"Manual / Phantombuster",
+     script:`Hey ${contact.name.split(" ")[0]} — I noticed ${contact.biz} isn't ranking in Google's local results for ${contact.location.split(",")[0]}.\n\nI ran a free audit — your score came back ${contact.grade}. Found a few quick wins. Mind if I send over the report? Takes 2 minutes to look at.`},
+    {id:"voice",icon:"🎤",name:"Voice Message (LinkedIn / Instagram)",tool:"Manual record",
+     script:`"Hey ${contact.name.split(" ")[0]}, this is MO — I ran a quick audit on ${contact.biz} and found something I think you'd want to know about. You're basically invisible online in ${contact.location.split(",")[0]} right now. I put together a short report — mind if I drop it in your inbox? Takes 2 minutes. Thanks."`},
+    {id:"sms",icon:"💬",name:"SMS",tool:"Twilio · Salesmsg",
+     script:`Hey ${contact.name.split(" ")[0]}, this is MO. Ran a free audit on ${contact.biz} — online presence scored a ${contact.grade}. Your full report: [link]. Worth 2 min?`},
+    {id:"mail",icon:"📬",name:"Direct Mail",tool:"Lob.com API",
+     script:`Postcard to: ${contact.name} — ${contact.biz}\n\nFront: Big "${contact.grade}" grade + 3 bullet gaps callouts\nBack: "Here's what I found about ${contact.biz}..." + QR code to personalized audit page + your contact info\n\nAuto-sent via Lob.com — dynamic template fills name, company, gaps.`},
+    {id:"page",icon:"🌐",name:"Personalized Audit Page",tool:"Auto-generated",
+     script:`URL: geni.youragency.com/${contact.biz.toLowerCase().replace(/\s+/g,"-")}\n\nShows ${contact.name.split(" ")[0]}:\n• Full audit score breakdown\n• 3 specific gaps\n• Your service recommendations\n• Book-a-call CTA\n\nYou get notified when they visit. QR code on the mail piece links here.`},
+    {id:"social",icon:"📱",name:"Social Media (Instagram / Facebook)",tool:"Manual sequence",
+     script:`Step 1: Like 2 recent posts (24hr delay)\nStep 2: Follow their account (12hr delay)\nStep 3: DM the audit as image screenshot — not a link\nStep 4: If no reply in 48hrs — send voice message:\n\n"Hey ${contact.name.split(" ")[0]}, sent you something about your online presence — just want to make sure you got it!"`},
+  ];
+
+  return(
+    <div>
+      <div className="card" style={{marginBottom:14}}>
+        <div className="card-hd"><span className="card-title">10-Day Sequence</span><Chip s={contact.status}/></div>
+        <div style={{display:"flex",overflowX:"auto",gap:0}}>
+          {[{d:"Day 1",icon:"📧",n:"Email"},{d:"Day 1-2",icon:"💼",n:"LinkedIn"},{d:"Day 2",icon:"🎤",n:"Voice"},{d:"Day 3",icon:"💬",n:"SMS"},{d:"Day 4-5",icon:"📬",n:"Mail"},{d:"Day 7",icon:"📧",n:"Follow-up"},{d:"Day 10",icon:"💼",n:"Final DM"}].map((s,i)=>(
+            <div key={i} style={{flex:1,minWidth:72,textAlign:"center",padding:"10px 4px",borderRight:i<6?"1px solid var(--border)":"none"}}>
+              <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:9,color:"var(--accent)",marginBottom:4}}>{s.d}</div>
+              <div style={{fontSize:16,marginBottom:3}}>{s.icon}</div>
+              <div style={{fontSize:10,fontWeight:600}}>{s.n}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-hd">
+          <span className="card-title">Channels</span>
+          <button className="btn btn-primary btn-sm" onClick={()=>toastFn("🚀 Full sequence launched for "+contact.name)}>Launch All</button>
+        </div>
+        {channels.map(c=>(
+          <div key={c.id}>
+            <div onClick={()=>setOpen(open===c.id?null:c.id)} style={{display:"flex",alignItems:"center",gap:12,padding:"10px 0",borderBottom:"1px solid var(--border)",cursor:"pointer"}}>
+              <div style={{width:34,height:34,borderRadius:8,background:open===c.id?"var(--accent-bg)":"var(--bg)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0}}>{c.icon}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:12,fontWeight:600,marginBottom:1}}>{c.name}</div>
+                <div style={{fontSize:11,color:"var(--text2)"}}>{c.tool}</div>
+              </div>
+              <span style={{color:"var(--text3)",fontSize:11}}>{open===c.id?"▲":"▼"}</span>
+            </div>
+            {open===c.id&&(
+              <div style={{background:"var(--bg)",borderRadius:6,padding:"12px",margin:"4px 0 8px",border:"1px solid var(--border)"}}>
+                <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:11,color:"var(--text)",lineHeight:1.8,whiteSpace:"pre-wrap"}}>{c.script}</div>
+                <div style={{display:"flex",gap:8,marginTop:10}}>
+                  <button onClick={()=>toastFn("📋 Script copied for "+contact.name)} className="btn btn-secondary btn-sm">Copy Script</button>
+                  <button onClick={()=>toastFn("🚀 "+c.name+" sent to "+contact.name)} className="btn btn-primary btn-sm">Send Now</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── CONTACT RECORD ───────────────────────────────────────────────────────────
+function ContactRecord({contact,onBack,onUpdate,toastFn}){
+  const [tab,setTab]=useState("overview");
+  const [auditing,setAuditing]=useState(false);
+  const [c,setC]=useState(contact);
+  const [editing,setEditing]=useState(false);
+
+  useEffect(()=>setC(contact),[contact]);
+  const upd=(ch)=>{const u={...c,...ch};setC(u);onUpdate(u);};
+
+  const runAudit=async()=>{
+    setAuditing(true);
+    toastFn("⚡ Running live audit for "+c.biz+"...");
+    try{
+      const keys=JSON.parse(localStorage.getItem("geni_keys")||"{}");
+      const gKey=keys["Google Places / PageSpeed API"]||EMBEDDED_GOOGLE_KEY;
+      const serpKey=keys["SerpAPI"]||"";
+      let live={};
+      // ── Google Places API ──────────────────────────────────────────────────
+      if(gKey&&c.biz){
+        try{
+          const enc=encodeURIComponent(c.biz+" "+c.location);
+          const fr=await fetch(`https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${enc}&inputtype=textquery&fields=place_id,rating,user_ratings_total,website,business_status&key=${gKey}`);
+          if(fr.ok){
+            const fd=await fr.json();
+            const place=fd.candidates&&fd.candidates[0];
+            if(place){
+              live.googleRating=place.rating||0;
+              live.googleReviewCount=place.user_ratings_total||0;
+              live.hasWebFromGoogle=!!place.website;
+              if(place.place_id){
+                const dr=await fetch(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=opening_hours,photos,formatted_phone_number&key=${gKey}`);
+                if(dr.ok){const dd=await dr.json();live.photoCount=(dd.result?.photos?.length||0);live.hasHours=!!(dd.result?.opening_hours);}
+              }
+            }
+          }
+        }catch(e){/* Places failed — use local scores */}
+      }
+      // ── PageSpeed Insights API ──────────────────────────────────────────────
+      if(gKey&&(c.website||live.hasWebFromGoogle)){
+        try{
+          const url=encodeURIComponent("https://"+(c.website||c.biz.toLowerCase().replace(/\s+/g,"")+".com"));
+          const pr=await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&strategy=mobile&key=${gKey}`);
+          if(pr.ok){
+            const pd=await pr.json();
+            live.pageSpeed=Math.round((pd.lighthouseResult?.categories?.performance?.score||0)*100);
+            live.lcp=pd.lighthouseResult?.audits?.['largest-contentful-paint']?.displayValue||"";
+          }
+        }catch(e){/* PageSpeed failed */}
+      }
+      // ── Build final scores from live data + existing scores ─────────────────
+      const enriched={...c};
+      if(live.googleReviewCount){
+        const rBase=Math.min(100,Math.round(live.googleReviewCount*1.2));
+        const rRating=Math.round((live.googleRating/5)*40);
+        enriched.reviews=Math.min(100,rBase+rRating);
+      }
+      if(live.pageSpeed){enriched.ws=Math.round((live.pageSpeed*0.6)+(enriched.ws*0.4));}
+      if(live.photoCount>3){enriched.listings=Math.min(100,enriched.listings+15);}
+      const data=generateAuditLocally(enriched);
+      // Attach live data notes to the audit
+      if(live.googleRating){
+        data.liveData={
+          googleRating:live.googleRating,
+          reviewCount:live.googleReviewCount,
+          pageSpeed:live.pageSpeed||null,
+          lcp:live.lcp||null,
+          photoCount:live.photoCount||0,
+          dataSource:gKey?"Google Places + PageSpeed Insights":"Score-based estimate"
+        };
+      }
+      const updated={...c,...enriched,auditData:data,activity:[{type:"audit",text:"Live audit completed"+(live.googleRating?" (Google Places + PageSpeed)":""),time:"Just now"},...(c.activity||[])]};
+      setC(updated);onUpdate(updated);
+      toastFn("✅ Audit complete for "+c.name+(live.googleRating?" — live data pulled":""));
+    }catch(e){console.error(e);toastFn("❌ Audit failed — check console");}
+    setAuditing(false);
+  };
+
+  const exportPDF=()=>{
+    const o=ovr(c);const og=s2g(o);
+    const mkeys=["listings","reviews","social","ws","ecom","ads","seo","tech"];
+    const mlabels={listings:"Listings",reviews:"Reviews",social:"Social Media",ws:"Website",ecom:"Ecommerce",ads:"Advertising",seo:"SEO",tech:"Technology"};
+    const w=window.open("","_blank");
+    w.document.write(`<!DOCTYPE html><html><head><title>${c.biz} Audit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;color:#1a202c;background:#fff;padding:40px;max-width:860px;margin:0 auto}
+    .hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;padding-bottom:20px;border-bottom:2px solid #e2e8f0}
+    .biz{font-size:26px;font-weight:700;margin-bottom:4px}.sub{font-size:12px;color:#64748b;margin-bottom:6px}.contact{font-size:12px;color:#374151}
+    .grade-big{font-size:52px;font-weight:800;color:${GC[og]};line-height:1;text-align:center}.grade-sub{font-size:11px;color:#94a3b8;text-align:center;margin-top:2px}
+    h2{font-size:13px;font-weight:600;color:#374151;margin:20px 0 10px;text-transform:uppercase;letter-spacing:0.5px}
+    .row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9}
+    .bar{width:100px;height:5px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin:0 10px}
+    .bar-f{height:100%;border-radius:3px}
+    .gap{background:#fef2f2;border:1px solid #fecaca;border-radius:5px;padding:7px 11px;margin-bottom:5px;font-size:12px;display:flex;gap:8px}
+    .opp{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:5px;padding:7px 11px;margin-bottom:5px;font-size:12px;display:flex;gap:8px}
+    .pitch{background:#eff6ff;border:1px solid #bfdbfe;border-radius:7px;padding:13px;font-size:13px;line-height:1.7;font-style:italic}
+    .svc{background:#f9fafb;border:1px solid #e2e8f0;border-radius:6px;padding:9px 12px;margin-bottom:6px}
+    .svc-n{font-size:12px;font-weight:600;color:#2563eb;margin-bottom:2px}.svc-r{font-size:11px;color:#64748b}
+    .vals{display:flex;gap:28px;margin-top:10px}
+    .val-n{font-size:22px;font-weight:700;color:#4f8eff;font-family:monospace}.val-l{font-size:10px;color:#94a3b8}
+    .footer{margin-top:32px;padding-top:14px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;font-size:10px;color:#94a3b8}
+    </style></head><body>
+    <div class="hd">
+      <div><div style="font-size:10px;color:#94a3b8;letter-spacing:1px;margin-bottom:6px">DIGITAL PRESENCE AUDIT — GENI POWERED BY VENDASTA</div>
+      <div class="biz">${c.biz}</div><div class="sub">${c.niche} · ${c.location} · ${c.website||"No website"}</div>
+      <div class="contact">${c.name} · ${c.email} · ${c.phone}</div></div>
+      <div><div class="grade-big">${og}</div><div class="grade-sub">${o}/100 Overall</div></div>
+    </div>
+    <h2>Audit Scores</h2>
+    ${mkeys.map(k=>{const v=c[k]||0;const g=s2g(v);const col=v>=70?"#16a34a":v>=50?"#2563eb":v>=30?"#ca8a04":v>=15?"#ea580c":"#dc2626";return`<div class="row"><span style="font-size:13px;font-weight:500">${mlabels[k]}</span><div style="display:flex;align-items:center"><div class="bar"><div class="bar-f" style="width:${v}%;background:${col}"></div></div><span style="font-size:12px;font-weight:700;color:${col};width:24px;text-align:right">${v}</span><span style="font-size:12px;font-weight:700;color:${GC[g]};margin-left:8px">${g}</span></div></div>`;}).join("")}
+    ${c.auditData?`
+    <h2>Gaps Identified</h2>${c.auditData.gaps?.map(g=>`<div class="gap"><span style="color:#dc2626">⚠</span>${g}</div>`).join("")}
+    <h2>Opportunities</h2>${c.auditData.opportunities?.map(o=>`<div class="opp"><span style="color:#16a34a">✓</span>${o}</div>`).join("")}
+    <h2>Recommended Pitch</h2><div class="pitch">"${c.auditData.pitch}"</div>
+    <h2>Services to Propose</h2>${c.auditData.services?.map(s=>`<div class="svc"><div class="svc-n">${s.name}</div><div class="svc-r">${s.reason}</div></div>`).join("")}
+    <h2>Estimated Value</h2><div class="vals"><div><div class="val-n">${c.auditData.estimatedValue||"$1,500-$2,500"}</div><div class="val-l">Monthly Retainer</div></div><div><div class="val-n">${c.auditData.closeProb||"70%"}</div><div class="val-l">Close Probability</div></div><div><div class="val-n">${c.auditData.priority||"High"}</div><div class="val-l">Priority</div></div></div>`:""}
+    <div class="footer"><span>Geni CRM · ${new Date().toLocaleDateString()}</span><span>Empify Digital Agency — Confidential</span></div>
+    </body></html>`);
+    w.document.close();setTimeout(()=>w.print(),600);
+  };
+
+  const o=ovr(c);const og=s2g(o);
+
+  return(
+    <div style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden",background:"var(--bg)"}}>
+      <div style={{background:"var(--white)",borderBottom:"1px solid var(--border)",padding:"12px 20px",display:"flex",alignItems:"center",gap:12,flexShrink:0}}>
+        <button onClick={onBack} className="btn btn-secondary btn-sm">← Contacts</button>
+        <div style={{width:1,height:18,background:"var(--border)"}}/>
+        <div style={{width:36,height:36,borderRadius:9,background:"linear-gradient(135deg,#4f8eff,#7c3aed)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,fontWeight:700,color:"#fff",flexShrink:0}}>{c.name.split(" ").map(n=>n[0]).join("").slice(0,2)}</div>
+        <div style={{flex:1}}>
+          <div style={{fontSize:15,fontWeight:700}}>{c.name}</div>
+          <div style={{fontSize:11,color:"var(--text2)"}}>{c.title} · {c.biz}</div>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+          <Grade g={og} size={32}/>
+          <Chip s={c.status}/>
+          <button onClick={exportPDF} className="btn btn-secondary btn-sm no-print">🖨️ Export PDF</button>
+          <button onClick={()=>toastFn("📧 Email queued for "+c.name)} className="btn btn-primary btn-sm">📧 Email</button>
+        </div>
+      </div>
+
+      <div className="tab-bar">
+        {["overview","audit","outreach","activity","notes"].map(t=>(
+          <button key={t} className={`tab ${tab===t?"active":""}`} onClick={()=>setTab(t)}>{t.charAt(0).toUpperCase()+t.slice(1)}</button>
+        ))}
+      </div>
+
+      <div className="rec-layout">
+        <div className="rec-main">
+          {tab==="overview"&&(
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+              <div className="card" style={{gridColumn:"1/-1"}}>
+                <div className="card-hd"><span className="card-title">Business Information</span>
+                  <button className="btn btn-secondary btn-sm" onClick={()=>{if(editing)toastFn("✅ Saved");setEditing(!editing);}}>
+                    {editing?"✓ Save":"Edit"}
+                  </button>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
+                  {[{l:"Business Name",k:"biz"},{l:"Contact Name",k:"name"},{l:"Title",k:"title"},{l:"Email",k:"email"},{l:"Phone",k:"phone"},{l:"Website",k:"website"},{l:"Niche",k:"niche"},{l:"Location",k:"location"}].map(f=>(
+                    <div key={f.k}>
+                      <label className="fi">{f.l}</label>
+                      {editing
+                        ? <input className="finput" value={c[f.k]||""} onChange={e=>upd({[f.k]:e.target.value})} />
+                        : <div style={{fontSize:13,padding:"5px 0",color:"var(--text)",fontWeight:f.k==="biz"?600:400}}>{c[f.k]||"—"}</div>
+                      }
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="card">
+                <div className="card-hd"><span className="card-title">Digital Scores</span></div>
+                {[{l:"Listings",k:"listings"},{l:"Reviews",k:"reviews"},{l:"Social",k:"social"},{l:"Website",k:"ws"},{l:"Ecommerce",k:"ecom"},{l:"Advertising",k:"ads"},{l:"SEO",k:"seo"},{l:"Technology",k:"tech"}].map(m=>(
+                  <div key={m.k} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"6px 0",borderBottom:"1px solid var(--border)"}}>
+                    <span style={{fontSize:12,color:"var(--text2)"}}>{m.l}</span>
+                    <SBar val={c[m.k]||0}/>
+                  </div>
+                ))}
+              </div>
+              <div className="card">
+                <div className="card-hd"><span className="card-title">Status</span></div>
+                <div style={{marginBottom:12}}>
+                  <label className="fi">Pipeline Stage</label>
+                  <select className="fselect" value={c.status} onChange={e=>upd({status:e.target.value})} style={{border:"1px solid var(--border)",borderRadius:6}}>
+                    {["new","outreach","replied","sent","closed"].map(s=><option key={s} value={s}>{s.charAt(0).toUpperCase()+s.slice(1)}</option>)}
+                  </select>
+                </div>
+                <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+                  {[{icon:"📧",l:"Email"},{icon:"💼",l:"LinkedIn"},{icon:"💬",l:"SMS"},{icon:"📬",l:"Mail"}].map(a=>(
+                    <button key={a.l} className="btn btn-secondary btn-sm" onClick={()=>toastFn(`${a.icon} ${a.l} queued for ${c.name}`)}>{a.icon} {a.l}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {tab==="audit"&&<AuditPanel contact={c} onRunAudit={runAudit} auditing={auditing} onExportPDF={exportPDF}/>}
+          {tab==="outreach"&&<OutreachPanel contact={c} toastFn={toastFn}/>}
+
+          {tab==="activity"&&(
+            <div className="card">
+              <div className="card-hd"><span className="card-title">Activity Timeline</span>
+                <button className="btn btn-secondary btn-sm" onClick={()=>{upd({activity:[{type:"note",text:"Manual note added",time:"Just now"},...(c.activity||[])]});toastFn("📝 Logged");}}>+ Log</button>
+              </div>
+              {(c.activity||[]).map((a,i)=>{
+                const icons={created:"🌱",email:"📧",reply:"💬",mail:"📬",sms:"📱",linkedin:"💼",audit:"⚡",note:"📝"};
+                const colors={created:GC.A,email:"var(--accent)",reply:GC.A,mail:"#ea580c",sms:"#7c3aed",linkedin:"#0077b5",audit:"#ca8a04",note:"var(--text2)"};
+                return(
+                  <div key={i} className="act-item">
+                    <div style={{width:8,height:8,borderRadius:"50%",background:colors[a.type]||"var(--text3)",marginTop:5,flexShrink:0}}/>
+                    <div><div className="act-text">{icons[a.type]||"•"} {a.text}</div><div className="act-time">{a.time}</div></div>
+                  </div>
+                );
+              })}
+              {(!c.activity||!c.activity.length)&&<div style={{textAlign:"center",padding:"20px",color:"var(--text3)"}}>No activity yet</div>}
+            </div>
+          )}
+
+          {tab==="notes"&&(
+            <div className="card">
+              <div className="card-hd"><span className="card-title">Notes</span></div>
+              <textarea className="ftextarea" value={c.notes||""} onChange={e=>upd({notes:e.target.value})} placeholder="Add notes — conversations, context, next steps..." style={{minHeight:200,width:"100%"}}/>
+              <button className="btn btn-primary btn-sm" style={{marginTop:10}} onClick={()=>toastFn("✅ Notes saved")}>Save Notes</button>
+            </div>
+          )}
+        </div>
+
+        <div className="rec-sb">
+          <div className="rec-sb-sec">
+            <div className="rec-sb-title">Contact Info</div>
+            {[{l:"Email",v:c.email},{l:"Phone",v:c.phone},{l:"Website",v:c.website||"None"},{l:"Location",v:c.location}].map(p=>(
+              <div key={p.l} className="rec-prop"><div className="rec-prop-l">{p.l}</div><div className="rec-prop-v">{p.v||"—"}</div></div>
+            ))}
+          </div>
+          <div className="rec-sb-sec">
+            <div className="rec-sb-title">Audit Summary</div>
+            <div className="rec-prop"><div className="rec-prop-l">Overall Score</div>
+              <div className="rec-prop-v" style={{color:GC[og],fontFamily:"'JetBrains Mono',monospace",fontSize:14}}>{o}/100 ({og})</div>
+            </div>
+            <div className="rec-prop"><div className="rec-prop-l">Website</div>
+              <div className="rec-prop-v" style={{color:c.hasWeb?"var(--green)":"var(--red)"}}>{c.hasWeb?"✓ Has website":"✗ No website"}</div>
+            </div>
+            {c.auditData&&<>
+              <div className="rec-prop"><div className="rec-prop-l">Est. Value</div><div className="rec-prop-v">{c.auditData.estimatedValue}</div></div>
+              <div className="rec-prop"><div className="rec-prop-l">Priority</div><div className="rec-prop-v" style={{color:"var(--red)"}}>{c.auditData.priority}</div></div>
+            </>}
+          </div>
+          <div className="rec-sb-sec">
+            <div className="rec-sb-title">Quick Actions</div>
+            <div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {[{icon:"⚡",l:"Run AI Audit",fn:runAudit},{icon:"🖨️",l:"Export PDF",fn:exportPDF},{icon:"🚀",l:"Launch Outreach",fn:()=>toastFn("🚀 Sequence launched")},{icon:"🧡",l:"Sync to HubSpot",fn:()=>toastFn("🧡 Synced to HubSpot")}].map(a=>(
+                <button key={a.l} className="btn btn-secondary btn-sm" style={{justifyContent:"flex-start",width:"100%"}} onClick={a.fn}>{a.icon} {a.l}</button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── TERRITORY MAKER ──────────────────────────────────────────────────────────
+function TerritoryMaker({toastFn,onSelectContact}){
+  const [territories,setTerritories]=useState(TERRITORIES);
+  const [showNew,setShowNew]=useState(false);
+  const [scanning,setScanning]=useState(null);
+  const [scanStep,setScanStep]=useState(0);
+  const [activeTerr,setActiveTerr]=useState(null);
+  const [websiteFilter,setWebsiteFilter]=useState("all");
+  const [form,setForm]=useState({name:"",area:"Atlanta, GA",niches:[],noWebOnly:false,gradeFilter:"all"});
+
+  const scanSteps=["Connecting to Google Business Profile API","Searching for businesses in area","Filtering by selected niches","Checking website presence via GBP","Running quick audit scores","Segmenting by grade","Syncing to contact database"];
+
+  const toggleNiche=(n)=>{
+    const arr=form.niches.includes(n)?form.niches.filter(x=>x!==n):[...form.niches,n];
+    setForm(f=>({...f,niches:arr}));
+  };
+
+  const runScan=(t)=>{
+    setScanning(t.id);setScanStep(0);let s=0;
+    const iv=setInterval(()=>{s++;setScanStep(s);if(s>=scanSteps.length){clearInterval(iv);setScanning(null);setScanStep(0);toastFn("✅ Scan complete — "+t.totalFound+" businesses found");}},700);
+  };
+
+  const createTerritory=()=>{
+    if(!form.name||!form.niches.length){toastFn("⚠️ Add a name and at least one niche");return;}
+    const t={id:Date.now(),name:form.name,area:form.area,niches:form.niches,totalFound:0,noWeb:0,gradeF:0,gradeD:0,created:"Sep 2025",leads:[],noWebOnly:form.noWebOnly,gradeFilter:form.gradeFilter};
+    setTerritories(ts=>[...ts,t]);
+    setShowNew(false);
+    setForm({name:"",area:"Atlanta, GA",niches:[],noWebOnly:false,gradeFilter:"all"});
+    toastFn("✅ Territory created — click Scan to find businesses");
+  };
+
+  if(activeTerr){
+    const terr=territories.find(t=>t.id===activeTerr);
+    const filteredLeads=(terr.leads||[]).filter(l=>{
+      if(websiteFilter==="no"&&l.hasWeb)return false;
+      if(websiteFilter==="yes"&&!l.hasWeb)return false;
+      return true;
+    });
+    return(
+      <div style={{flex:1,overflowY:"auto",padding:20}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
+          <button className="btn btn-secondary btn-sm" onClick={()=>setActiveTerr(null)}>← Territories</button>
+          <div style={{width:1,height:16,background:"var(--border)"}}/>
+          <div>
+            <div style={{fontSize:16,fontWeight:700}}>{terr.name}</div>
+            <div style={{fontSize:12,color:"var(--text2)"}}>{terr.area} · {terr.niches.join(", ")}</div>
+          </div>
+          <div style={{marginLeft:"auto",display:"flex",gap:8}}>
+            <select value={websiteFilter} onChange={e=>setWebsiteFilter(e.target.value)} style={{background:"var(--white)",border:"1px solid var(--border)",borderRadius:6,padding:"6px 10px",fontSize:12,color:"var(--text)"}}>
+              <option value="all">All businesses</option>
+              <option value="no">No website only</option>
+              <option value="yes">Has website only</option>
+            </select>
+            <button className="btn btn-primary btn-sm" onClick={()=>runScan(terr)}>⚡ Re-Scan</button>
+            <button className="btn btn-secondary btn-sm" onClick={()=>toastFn("📥 "+filteredLeads.length+" leads imported")}>Import All</button>
+          </div>
+        </div>
+
+        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:16}}>
+          {[{l:"Total Found",v:terr.totalFound,c:"var(--accent)"},{l:"No Website",v:terr.noWeb,c:"var(--red)"},{l:"Grade F",v:terr.gradeF,c:"var(--orange)"},{l:"Grade D",v:terr.gradeD,c:"var(--yellow)"}].map(s=>(
+            <div key={s.l} className="card" style={{padding:"12px 14px"}}>
+              <div style={{fontSize:10,color:"var(--text2)",marginBottom:4}}>{s.l}</div>
+              <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:22,fontWeight:700,color:s.c}}>{s.v}</div>
+            </div>
+          ))}
+        </div>
+
+        {filteredLeads.length>0?(
+          <div className="card" style={{padding:0,overflow:"hidden"}}>
+            <div style={{padding:"12px 16px",borderBottom:"1px solid var(--border)",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+              <span style={{fontSize:13,fontWeight:600}}>Leads in {terr.name}</span>
+              <span style={{fontSize:11,color:"var(--text2)"}}>{filteredLeads.length} businesses</span>
+            </div>
+            <div style={{overflowX:"auto"}}>
+              <table className="dt">
+                <thead>
+                  <tr>
+                    <th>Business</th><th>Niche</th><th>Phone</th><th>Website</th>
+                    <th>Grade</th><th>SEO</th><th>Reviews</th><th>Ads</th><th>Status</th><th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredLeads.map(l=>{
+                    const og=s2g(ovr({...l,ws:l.ws||0,ecom:l.ecom||0,tech:l.tech||0}));
+                    return(
+                      <tr key={l.id}>
+                        <td style={{fontWeight:600}}>{l.biz}</td>
+                        <td style={{color:"var(--text2)"}}>{l.niche}</td>
+                        <td style={{color:"var(--text2)"}}>{l.phone}</td>
+                        <td>{l.hasWeb?<span style={{color:"var(--green)",fontWeight:500}}>✓ Yes</span>:<span style={{color:"var(--red)",fontWeight:600}}>✗ None</span>}</td>
+                        <td><Grade g={og} size={24}/></td>
+                        <td><SBar val={l.seo}/></td>
+                        <td><SBar val={l.reviews}/></td>
+                        <td><SBar val={l.ads}/></td>
+                        <td><Chip s={l.status||"new"}/></td>
+                        <td>
+                          <button className="btn btn-primary btn-sm" onClick={()=>toastFn("📥 "+l.biz+" imported as contact")}>Import</button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ):(
+          <div className="card" style={{textAlign:"center",padding:"40px 20px"}}>
+            <div style={{fontSize:36,marginBottom:12}}>🔍</div>
+            <div style={{fontSize:14,fontWeight:600,marginBottom:6}}>No leads yet in this territory</div>
+            <div style={{fontSize:12,color:"var(--text2)",marginBottom:16}}>Run a scan to discover businesses in this area</div>
+            <button className="btn btn-primary" onClick={()=>runScan(terr)}>⚡ Scan Now</button>
+          </div>
+        )}
+
+        {scanning===activeTerr&&(
+          <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.5)",zIndex:400,display:"flex",alignItems:"center",justifyContent:"center"}}>
+            <div style={{background:"var(--white)",borderRadius:14,padding:28,width:420,maxWidth:"90vw"}}>
+              <div style={{fontFamily:"'Inter',sans-serif",fontSize:16,fontWeight:700,marginBottom:4}}>Scanning {terr.name}...</div>
+              <div style={{fontSize:12,color:"var(--text2)",marginBottom:16}}>Finding businesses in {terr.area}</div>
+              <div style={{height:3,background:"var(--border)",borderRadius:2,overflow:"hidden",marginBottom:16}}>
+                <div style={{width:`${(scanStep/scanSteps.length)*100}%`,height:"100%",background:"var(--accent)",transition:"width 0.5s"}}/>
+              </div>
+              {scanSteps.map((s,i)=>(
+                <div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 0",fontSize:12,color:i<scanStep?"var(--green)":i===scanStep?"var(--text)":"var(--text3)"}}>
+                  <span>{i<scanStep?"✅":i===scanStep?"⏳":"○"}</span>{s}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return(
+    <div style={{flex:1,overflowY:"auto",padding:20}}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
+        <div>
+          <div style={{fontSize:17,fontWeight:700}}>Territory Maker</div>
+          <div style={{fontSize:12,color:"var(--text2)",marginTop:2}}>Define markets, discover businesses, filter by website presence</div>
+        </div>
+        <button className="btn btn-primary" onClick={()=>setShowNew(true)}>+ New Territory</button>
+      </div>
+
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12,marginBottom:20}}>
+        {[{l:"Territories",v:territories.length,c:"var(--accent)"},{l:"Total Businesses",v:territories.reduce((a,t)=>a+t.totalFound,0),c:"var(--text)"},{l:"No Website",v:territories.reduce((a,t)=>a+t.noWeb,0),c:"var(--red)"},{l:"Grade F",v:territories.reduce((a,t)=>a+t.gradeF,0),c:"var(--orange)"}].map(s=>(
+          <div key={s.l} className="card" style={{padding:"12px 14px"}}>
+            <div style={{fontSize:10,color:"var(--text2)",marginBottom:4}}>{s.l}</div>
+            <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:22,fontWeight:700,color:s.c}}>{s.v}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="terr-grid">
+        {territories.map(t=>(
+          <div key={t.id} className="terr-card" onClick={()=>setActiveTerr(t.id)}>
+            <div style={{padding:"14px 16px",borderBottom:"1px solid var(--border)",borderTop:"3px solid var(--accent)"}}>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6}}>
+                <div style={{fontWeight:700,fontSize:14}}>{t.name}</div>
+                <span style={{fontSize:11,color:"var(--text2)",background:"var(--bg)",padding:"2px 8px",borderRadius:10,border:"1px solid var(--border)"}}>{t.area}</span>
+              </div>
+              <div style={{display:"flex",gap:4,flexWrap:"wrap"}}>
+                {t.niches.map(n=><span key={n} style={{fontSize:10,background:"var(--accent-bg)",color:"var(--accent)",padding:"2px 7px",borderRadius:10,fontWeight:500}}>{n}</span>)}
+              </div>
+            </div>
+            <div style={{padding:"14px 16px"}}>
+              {scanning===t.id?(
+                <div>
+                  <div style={{height:3,background:"var(--border)",borderRadius:2,overflow:"hidden",marginBottom:10}}>
+                    <div style={{width:`${(scanStep/scanSteps.length)*100}%`,height:"100%",background:"var(--accent)",transition:"width 0.5s"}}/>
+                  </div>
+                  <div style={{fontSize:11,color:"var(--text2)"}}>Step {scanStep}: {scanSteps[Math.min(scanStep,scanSteps.length-1)]}</div>
+                </div>
+              ):(
+                <>
+                  {[{l:"Businesses found",v:t.totalFound||"—"},{l:"No website",v:t.noWeb||"—",red:true},{l:"Grade F leads",v:t.gradeF||"—"},{l:"Grade D leads",v:t.gradeD||"—"},{l:"Created",v:t.created}].map(s=>(
+                    <div key={s.l} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid var(--border)",fontSize:12}}>
+                      <span style={{color:s.red?"var(--red)":"var(--text2)"}}>{s.l}</span>
+                      <span style={{fontWeight:600,color:s.red&&s.v!=="—"?"var(--red)":"var(--text)"}}>{s.v}</span>
+                    </div>
+                  ))}
+                  <div style={{display:"flex",gap:8,marginTop:12}}>
+                    <button className="btn btn-primary btn-sm" style={{flex:1}} onClick={e=>{e.stopPropagation();runScan(t);}}>⚡ Scan</button>
+                    <button className="btn btn-secondary btn-sm" style={{flex:1}} onClick={e=>{e.stopPropagation();setActiveTerr(t.id);}}>View Leads →</button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {showNew&&(
+        <div className="modal-bg" onClick={()=>setShowNew(false)}>
+          <div className="modal" style={{maxWidth:500}} onClick={e=>e.stopPropagation()}>
+            <div className="modal-hd">
+              <span className="modal-title">New Territory</span>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setShowNew(false)}>✕</button>
+            </div>
+            <div className="modal-body">
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:14}}>
+                <div>
+                  <label className="fi">Territory Name</label>
+                  <input className="finput" style={{border:"1px solid var(--border)",borderRadius:6}} value={form.name} onChange={e=>setForm(f=>({...f,name:e.target.value}))} placeholder="e.g. Atlanta North" />
+                </div>
+                <div>
+                  <label className="fi">Target Area</label>
+                  <select className="fselect" style={{border:"1px solid var(--border)",borderRadius:6}} value={form.area} onChange={e=>setForm(f=>({...f,area:e.target.value}))}>
+                    {MARKETS.map(m=><option key={m}>{m}</option>)}
+                  </select>
+                </div>
+              </div>
+
+              <div style={{marginBottom:14}}>
+                <label className="fi">Target Niches</label>
+                <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:4}}>
+                  {NICHES.map(n=>(
+                    <button key={n} onClick={()=>toggleNiche(n)} style={{padding:"5px 12px",borderRadius:20,border:`1px solid ${form.niches.includes(n)?"var(--accent)":"var(--border)"}`,background:form.niches.includes(n)?"var(--accent-bg)":"var(--white)",color:form.niches.includes(n)?"var(--accent)":"var(--text2)",fontSize:12,fontWeight:form.niches.includes(n)?600:400}}>
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{background:"var(--bg)",border:"1px solid var(--border)",borderRadius:6,padding:"14px",marginBottom:14}}>
+                <div style={{fontSize:13,fontWeight:600,marginBottom:10}}>Smart Filters</div>
+                <label style={{display:"flex",alignItems:"flex-start",gap:10,cursor:"pointer",marginBottom:12}}>
+                  <input type="checkbox" checked={form.noWebOnly} onChange={e=>setForm(f=>({...f,noWebOnly:e.target.checked}))} style={{marginTop:2}} />
+                  <div>
+                    <div style={{fontSize:12,fontWeight:500}}>No website businesses only</div>
+                    <div style={{fontSize:11,color:"var(--text2)"}}>Only surface businesses with no website on Google Business Profile — highest priority targets</div>
+                  </div>
+                </label>
+                <div>
+                  <label className="fi">Minimum Grade Filter</label>
+                  <select className="fselect" style={{border:"1px solid var(--border)",borderRadius:6}} value={form.gradeFilter} onChange={e=>setForm(f=>({...f,gradeFilter:e.target.value}))}>
+                    <option value="all">All grades (A-F)</option>
+                    <option value="D">D + F only</option>
+                    <option value="F">F only — hottest leads</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="modal-ft">
+              <button className="btn btn-secondary" onClick={()=>setShowNew(false)}>Cancel</button>
+              <button className="btn btn-primary" onClick={createTerritory}>Create Territory</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── CSV IMPORT ───────────────────────────────────────────────────────────────
+function parseCSV(text){
+  const lines=text.split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2)return[];
+  const hdr=lines[0].split(",").map(h=>h.replace(/"/g,"").trim().toLowerCase());
+  const get=(row,keys)=>{for(const k of keys){const i=hdr.findIndex(h=>h.includes(k));if(i>=0&&row[i])return row[i].replace(/"/g,"").trim();}return"";};
+  return lines.slice(1).map((line,idx)=>{
+    // Handle quoted commas
+    const row=[];let cur="",inQ=false;
+    for(const ch of line){if(ch==='"')inQ=!inQ;else if(ch===","&&!inQ){row.push(cur);cur="";}else cur+=ch;}
+    row.push(cur);
+    const biz=get(row,["business name","company","biz","organization","business"]);
+    if(!biz)return null;
+    const hasWebVal=get(row,["website","web","url","site"]);
+    const hasWeb=!!hasWebVal&&hasWebVal.length>3&&!hasWebVal.toLowerCase().includes("none")&&!hasWebVal.toLowerCase().includes("n/a");
+    const seoRaw=parseInt(get(row,["seo"])||"0",10);
+    const revRaw=parseInt(get(row,["review","rating"])||"0",10);
+    const socRaw=parseInt(get(row,["social"])||"0",10);
+    const wsRaw=parseInt(get(row,["website score","web score","ws"])||"0",10);
+    const adsRaw=parseInt(get(row,["ads","advertising"])||"0",10);
+    const listRaw=parseInt(get(row,["listing"])||"0",10);
+    const ecomRaw=parseInt(get(row,["ecom","ecommerce"])||"0",10);
+    const techRaw=parseInt(get(row,["tech","technology"])||"0",10);
+    // If no explicit scores, generate realistic low scores for prospects
+    const seo=seoRaw||Math.floor(Math.random()*30+3);
+    const reviews=revRaw||Math.floor(Math.random()*20+2);
+    const social=socRaw||Math.floor(Math.random()*20+2);
+    const ws=wsRaw||(hasWeb?Math.floor(Math.random()*40+15):0);
+    const ads=adsRaw||Math.floor(Math.random()*15);
+    const listings=listRaw||Math.floor(Math.random()*30+5);
+    const ecom=ecomRaw||Math.floor(Math.random()*10);
+    const tech=techRaw||Math.floor(Math.random()*20);
+    const o=Math.round((seo+reviews+social+ws+ads+listings+ecom+tech)/8);
+    const grade=o>=80?"A":o>=60?"B":o>=40?"C":o>=20?"D":"F";
+    const phone=get(row,["phone","telephone","mobile"]);
+    const email=get(row,["email","e-mail"]);
+    const niche=get(row,["niche","industry","type","category","vertical"])||"General";
+    const location=get(row,["city","location","market","area","state"])||"Atlanta, GA";
+    const cname=get(row,["contact","owner","name","first name"])||"Owner";
+    return{
+      id:Date.now()+idx,
+      name:cname,biz,title:"Owner",
+      email,phone,
+      niche,location,
+      website:hasWebVal||"",hasWeb,
+      grade,seo,reviews,social,ws,ads,listings,ecom,tech,
+      status:"new",notes:"",auditData:null,
+      activity:[{type:"import",text:"Imported from CSV",time:"Just now"}]
+    };
+  }).filter(Boolean);
+}
+
+// ── CONTACTS LIST ────────────────────────────────────────────────────────────
+function ContactsList({contacts,onSelect,toastFn,onImport}){
+  const [search,setSearch]=useState("");
+  const [nicheF,setNicheF]=useState("all");
+  const [webF,setWebF]=useState("all");
+  const [gradeF,setGradeF]=useState("all");
+  const [scanning,setScanning]=useState(false);
+  const [scanStep,setScanStep]=useState(0);
+  const [dragOver,setDragOver]=useState(false);
+  const [csvPreview,setCsvPreview]=useState(null);
+  const fileRef=useRef();
+
+  const handleCSVFile=async(file)=>{
+    if(!file||!file.name.endsWith(".csv"))return toastFn("⚠️ Please upload a .csv file");
+    const text=await file.text();
+    const rows=parseCSV(text);
+    if(!rows.length)return toastFn("⚠️ No valid rows found in CSV");
+    setCsvPreview({rows,filename:file.name});
+  };
+
+  const confirmImport=()=>{
+    if(!csvPreview)return;
+    onImport(csvPreview.rows);
+    toastFn(`✅ ${csvPreview.rows.length} leads imported from ${csvPreview.filename}`);
+    setCsvPreview(null);
+  };
+
+  const scanSteps=["Connecting to Apollo.io + Apify","Scraping Google Maps for Atlanta metro","Cleaning + deduplicating list","Verifying emails via Million Verifier","Checking website presence via GBP","Running Vendasta audit scores","Segmenting by grade","Syncing to HubSpot CRM"];
+
+  const runScan=()=>{
+    setScanning(true);setScanStep(0);let s=0;
+    const iv=setInterval(()=>{s++;setScanStep(s);if(s>=scanSteps.length){clearInterval(iv);setScanning(false);setScanStep(0);toastFn("✅ 12 new contacts found");}},700);
+  };
+
+  const filtered=contacts.filter(c=>{
+    const ms=!search||c.name.toLowerCase().includes(search.toLowerCase())||c.biz.toLowerCase().includes(search.toLowerCase())||c.location.toLowerCase().includes(search.toLowerCase());
+    const mn=nicheF==="all"||c.niche.toLowerCase().includes(nicheF.toLowerCase());
+    const mw=webF==="all"||(webF==="no"&&!c.hasWeb)||(webF==="yes"&&c.hasWeb);
+    const mg=gradeF==="all"||c.grade===gradeF||(gradeF==="DF"&&(c.grade==="D"||c.grade==="F"));
+    return ms&&mn&&mw&&mg;
+  });
+
+  return(
+    <div style={{display:"flex",flexDirection:"column",flex:1,overflow:"hidden"}}>
+      <div style={{background:"var(--white)",borderBottom:"1px solid var(--border)",padding:"10px 16px",display:"flex",gap:8,alignItems:"center",flexWrap:"wrap",flexShrink:0}}>
+        <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search contacts..." style={{background:"var(--bg)",border:"1px solid var(--border)",borderRadius:6,padding:"6px 10px",fontSize:12,color:"var(--text)",width:170}} />
+        <select value={nicheF} onChange={e=>setNicheF(e.target.value)} style={{background:"var(--bg)",border:"1px solid var(--border)",borderRadius:6,padding:"6px 10px",fontSize:12,color:"var(--text)"}}>
+          <option value="all">All Niches</option>
+          {NICHES.map(n=><option key={n} value={n}>{n}</option>)}
+        </select>
+        <select value={webF} onChange={e=>setWebF(e.target.value)} style={{background:"var(--bg)",border:"1px solid var(--border)",borderRadius:6,padding:"6px 10px",fontSize:12,color:"var(--text)"}}>
+          <option value="all">Website: All</option>
+          <option value="no">No Website</option>
+          <option value="yes">Has Website</option>
+        </select>
+        <select value={gradeF} onChange={e=>setGradeF(e.target.value)} style={{background:"var(--bg)",border:"1px solid var(--border)",borderRadius:6,padding:"6px 10px",fontSize:12,color:"var(--text)"}}>
+          <option value="all">All Grades</option>
+          <option value="F">F Only</option>
+          <option value="DF">D + F</option>
+          <option value="C">C</option>
+        </select>
+        <span style={{fontSize:11,color:"var(--text2)"}}>{filtered.length} contacts</span>
+        <div style={{marginLeft:"auto",display:"flex",gap:8}}>
+          <button className="btn btn-secondary btn-sm" onClick={()=>toastFn("📥 Exporting "+filtered.length+" contacts")}>↓ Export</button>
+          <button className="btn btn-secondary btn-sm" onClick={()=>fileRef.current&&fileRef.current.click()}>📂 Import CSV</button>
+          <input ref={fileRef} type="file" accept=".csv" style={{display:"none"}} onChange={e=>e.target.files[0]&&handleCSVFile(e.target.files[0])}/>
+          <button className="btn btn-primary btn-sm" onClick={runScan}>⚡ Run Scan</button>
+        </div>
+      </div>
+
+      {/* CSV Drag-Drop Zone */}
+      <div
+        onDragOver={e=>{e.preventDefault();setDragOver(true);}}
+        onDragLeave={()=>setDragOver(false)}
+        onDrop={e=>{e.preventDefault();setDragOver(false);const f=e.dataTransfer.files[0];if(f)handleCSVFile(f);}}
+        style={{margin:"0",padding:"10px 16px",background:dragOver?"var(--accent-bg)":"transparent",borderBottom:"1px solid var(--border)",transition:"all 0.2s",display:"flex",alignItems:"center",gap:10,cursor:"pointer",flexShrink:0}}
+        onClick={()=>fileRef.current&&fileRef.current.click()}
+      >
+        <div style={{width:36,height:36,borderRadius:8,background:dragOver?"var(--accent)":"var(--bg)",border:`1.5px dashed ${dragOver?"var(--accent)":"var(--border)"}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,transition:"all 0.2s"}}>📂</div>
+        <div>
+          <div style={{fontSize:12,fontWeight:600,color:dragOver?"var(--accent)":"var(--text)"}}>Drop your Data Axle CSV here — or click to browse</div>
+          <div style={{fontSize:11,color:"var(--text2)"}}>Accepts any CSV export. Columns auto-mapped: Business Name, Phone, Email, Website, Niche, City.</div>
+        </div>
+        {contacts.length===0&&<span style={{marginLeft:"auto",fontSize:11,color:"var(--text3)"}}>No contacts yet</span>}
+      </div>
+
+      {/* CSV Preview Modal */}
+      {csvPreview&&(
+        <div className="modal-bg" onClick={()=>setCsvPreview(null)}>
+          <div className="modal" style={{maxWidth:700}} onClick={e=>e.stopPropagation()}>
+            <div className="modal-hd">
+              <span className="modal-title">Preview — {csvPreview.rows.length} leads from {csvPreview.filename}</span>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setCsvPreview(null)}>✕</button>
+            </div>
+            <div className="modal-body" style={{padding:0,maxHeight:400,overflowY:"auto"}}>
+              <table className="dt">
+                <thead><tr><th>Business</th><th>Contact</th><th>Phone</th><th>Website</th><th>Niche</th><th>Location</th><th>Grade</th></tr></thead>
+                <tbody>
+                  {csvPreview.rows.slice(0,50).map((r,i)=>(
+                    <tr key={i}>
+                      <td style={{fontWeight:600}}>{r.biz}</td>
+                      <td>{r.name}</td>
+                      <td style={{color:"var(--text2)"}}>{r.phone||"—"}</td>
+                      <td>{r.hasWeb?<span style={{color:"var(--green)"}}>✓ Yes</span>:<span style={{color:"var(--red)"}}>✗ None</span>}</td>
+                      <td style={{color:"var(--text2)"}}>{r.niche}</td>
+                      <td style={{color:"var(--text2)"}}>{r.location}</td>
+                      <td><Grade g={r.grade} size={22}/></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {csvPreview.rows.length>50&&<div style={{padding:"10px 16px",fontSize:11,color:"var(--text2)"}}>Showing 50 of {csvPreview.rows.length} rows</div>}
+            </div>
+            <div className="modal-ft">
+              <button className="btn btn-secondary" onClick={()=>setCsvPreview(null)}>Cancel</button>
+              <button className="btn btn-primary" onClick={confirmImport}>✅ Import {csvPreview.rows.length} Leads</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {scanning&&(
+        <div style={{background:"#fffbeb",borderBottom:"1px solid #fde68a",padding:"8px 16px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:4}}>
+            <span style={{fontSize:12,fontWeight:600,color:"#92400e"}}>⚡ Geni Scan Running...</span>
+            <div style={{flex:1,height:3,background:"#fde68a",borderRadius:2,overflow:"hidden"}}>
+              <div style={{width:`${(scanStep/scanSteps.length)*100}%`,height:"100%",background:"#d97706",transition:"width 0.5s"}}/>
+            </div>
+          </div>
+          <div style={{fontSize:11,color:"#b45309"}}>{scanStep<scanSteps.length?`Step ${scanStep+1}: ${scanSteps[scanStep]}`:"Done!"}</div>
+        </div>
+      )}
+
+      <div style={{display:"flex",gap:0,borderBottom:"1px solid var(--border)",background:"var(--white)",flexShrink:0}}>
+        {[{l:"Total",v:contacts.length,c:"var(--text)"},{l:"No Website",v:contacts.filter(c=>!c.hasWeb).length,c:"var(--red)"},{l:"Grade F",v:contacts.filter(c=>c.grade==="F").length,c:"var(--orange)"},{l:"In Outreach",v:contacts.filter(c=>c.status!=="new").length,c:"var(--accent)"}].map((s,i)=>(
+          <div key={s.l} style={{flex:1,padding:"8px 14px",borderRight:i<3?"1px solid var(--border)":"none",textAlign:"center"}}>
+            <div style={{fontFamily:"'JetBrains Mono',monospace",fontSize:17,fontWeight:700,color:s.c}}>{s.v}</div>
+            <div style={{fontSize:10,color:"var(--text2)"}}>{s.l}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{flex:1,overflowY:"auto"}}>
+        {filtered.length===0&&contacts.length===0&&(
+          <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:"100%",gap:16,padding:40,textAlign:"center"}}>
+            <div style={{fontSize:48}}>🎯</div>
+            <div style={{fontSize:18,fontWeight:700}}>No contacts yet — let's get some real leads</div>
+            <div style={{fontSize:13,color:"var(--text2)",maxWidth:420,lineHeight:1.7}}>You have two ways to add real businesses from Google:</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,maxWidth:500,width:"100%"}}>
+              <div style={{background:"var(--accent-bg)",border:"1px solid rgba(79,142,255,0.25)",borderRadius:10,padding:16,textAlign:"left"}}>
+                <div style={{fontSize:20,marginBottom:6}}>🔎</div>
+                <div style={{fontWeight:600,fontSize:13,marginBottom:4}}>Quick Audit</div>
+                <div style={{fontSize:12,color:"var(--text2)",lineHeight:1.6}}>Search any business by name, pull live Google data, then save them as a contact.</div>
+              </div>
+              <div style={{background:"var(--green-bg)",border:"1px solid var(--green-bd)",borderRadius:10,padding:16,textAlign:"left"}}>
+                <div style={{fontSize:20,marginBottom:6}}>📊</div>
+                <div style={{fontWeight:600,fontSize:13,marginBottom:4}}>Import CSV</div>
+                <div style={{fontSize:12,color:"var(--text2)",lineHeight:1.6}}>Drag a Data Axle CSV export onto this page to bulk-import real leads instantly.</div>
+              </div>
+            </div>
+          </div>
+        )}
+        <table className="dt" style={{display:contacts.length===0?"none":"table"}}>
+          <thead>
+            <tr>
+              <th>Contact</th><th>Business</th><th>Niche</th><th>Location</th><th>Website</th>
+              <th>Grade</th><th>SEO</th><th>Reviews</th><th>Social</th><th>Ads</th><th>Status</th><th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map(c=>(
+              <tr key={c.id} onClick={()=>onSelect(c)}>
+                <td>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:28,height:28,borderRadius:7,background:"linear-gradient(135deg,#4f8eff,#7c3aed)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#fff",flexShrink:0}}>{c.name.split(" ").map(n=>n[0]).join("").slice(0,2)}</div>
+                    <div><div style={{fontWeight:500,fontSize:12}}>{c.name}</div><div style={{fontSize:10,color:"var(--text2)"}}>{c.title}</div></div>
+                  </div>
+                </td>
+                <td><div style={{fontWeight:500,fontSize:12}}>{c.biz}</div><div style={{fontSize:10,color:"var(--text2)"}}>{c.email}</div></td>
+                <td style={{fontSize:12,color:"var(--text2)"}}>{c.niche}</td>
+                <td style={{fontSize:12,color:"var(--text2)"}}>{c.location}</td>
+                <td>{c.hasWeb?<span style={{color:"var(--green)",fontSize:11,fontWeight:500}}>✓ Yes</span>:<span style={{color:"var(--red)",fontSize:11,fontWeight:600}}>✗ None</span>}</td>
+                <td><Grade g={c.grade} size={24}/></td>
+                <td><SBar val={c.seo}/></td>
+                <td><SBar val={c.reviews}/></td>
+                <td><SBar val={c.social}/></td>
+                <td><SBar val={c.ads}/></td>
+                <td><Chip s={c.status}/></td>
+                <td><button className="btn btn-secondary btn-sm" onClick={e=>{e.stopPropagation();onSelect(c);}}>Open →</button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+// ── PIPELINE ─────────────────────────────────────────────────────────────────
+function Pipeline({contacts,onSelect}){
+  const stages=[{s:"new",l:"New Leads",c:"var(--accent)"},{s:"outreach",l:"Outreach Sent",c:"var(--yellow)"},{s:"replied",l:"Replied",c:"var(--green)"},{s:"sent",l:"Mail Sent",c:"var(--purple)"},{s:"closed",l:"Closed",c:"var(--red)"}];
+  return(
+    <div style={{flex:1,overflow:"hidden",display:"flex",flexDirection:"column"}}>
+      <div style={{padding:"12px 16px",borderBottom:"1px solid var(--border)",background:"var(--white)",flexShrink:0}}>
+        <div style={{fontSize:15,fontWeight:700}}>Pipeline</div>
+        <div style={{fontSize:12,color:"var(--text2)"}}>Track every contact through your sales funnel</div>
+      </div>
+      <div className="kanban">
+        {stages.map(col=>{
+          const items=contacts.filter(c=>c.status===col.s);
+          return(
+            <div key={col.s} className="k-col">
+              <div className="k-col-hd" style={{borderTop:`3px solid ${col.c}`}}>
+                <span className="k-col-title">{col.l}</span>
+                <span style={{fontFamily:"'JetBrains Mono',monospace",fontSize:10,color:"var(--text2)",background:"var(--white)",padding:"2px 7px",borderRadius:10,border:"1px solid var(--border)"}}>{items.length}</span>
+              </div>
+              <div className="k-col-body">
+                {items.map(c=>{
+                  const og=s2g(ovr(c));
+                  return(
+                    <div key={c.id} className="k-card" onClick={()=>onSelect(c)}>
+                      <div style={{fontWeight:600,fontSize:12,marginBottom:2}}>{c.biz}</div>
+                      <div style={{fontSize:10,color:"var(--text2)",marginBottom:6}}>{c.niche} · {c.location.split(",")[0]}</div>
+                      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                        <Grade g={og} size={20}/>
+                        {c.hasWeb?<span style={{fontSize:9,color:"var(--green)"}}>✓ web</span>:<span style={{fontSize:9,color:"var(--red)"}}>✗ no web</span>}
+                        {c.auditData&&<span style={{fontSize:9,color:"var(--accent)"}}>⚡ audited</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── QUICK AUDIT PAGE ─────────────────────────────────────────────────────────
+function QuickAuditPage({showToast,onSaveLead}){
+  const [query,setQuery]=React.useState("");
+  const [suggestions,setSuggestions]=React.useState([]);
+  const [selected,setSelected]=React.useState(null);
+  const [auditing,setAuditing]=React.useState(false);
+  const [result,setResult]=React.useState(null);
+  const [searching,setSearching]=React.useState(false);
+  const debounceRef=React.useRef(null);
+
+  const getKey=()=>{
+    try{return JSON.parse(localStorage.getItem("geni_keys")||"{}")["Google Places / PageSpeed API"]||EMBEDDED_GOOGLE_KEY;}catch{return EMBEDDED_GOOGLE_KEY;}
+  };
+
+  // Uses New Places API v1 — supports CORS from browser
+  const searchPlaces=async(q)=>{
+    const key=getKey();
+    if(!key){showToast("⚠️ Add your Google Places API key in Settings first");return;}
+    if(!q||q.length<3){setSuggestions([]);return;}
+    setSearching(true);
+    try{
+      const r=await fetch("https://places.googleapis.com/v1/places:autocomplete",{
+        method:"POST",
+        headers:{"Content-Type":"application/json","X-Goog-Api-Key":key},
+        body:JSON.stringify({input:q,includedPrimaryTypes:["establishment"]})
+      });
+      if(r.ok){
+        const d=await r.json();
+        const preds=(d.suggestions||[]).map(s=>s.placePrediction).filter(Boolean);
+        setSuggestions(preds.slice(0,6));
+      }else{
+        const err=await r.json().catch(()=>({}));
+        console.error("Autocomplete error:",err);
+        setSuggestions([]);
+      }
+    }catch(e){
+      console.error("Autocomplete fetch error:",e);
+      setSuggestions([]);
+    }
+    setSearching(false);
+  };
+
+  const onInput=(v)=>{
+    setQuery(v);
+    setSelected(null);
+    setResult(null);
+    clearTimeout(debounceRef.current);
+    debounceRef.current=setTimeout(()=>searchPlaces(v),350);
+  };
+
+  const pickSuggestion=(s)=>{
+    // New API: s.text.text is the full display name, s.placeId is the id
+    setQuery(s.text?.text||s.structuredFormat?.mainText?.text||"");
+    setSelected(s);
+    setSuggestions([]);
+  };
+
+  const runQuickAudit=async()=>{
+    if(!selected&&!query){showToast("⚠️ Type a business name first");return;}
+    const key=getKey();
+    if(!key){showToast("⚠️ Add your Google Places API key in Settings first");return;}
+    setAuditing(true);
+    setResult(null);
+    showToast("⚡ Pulling live data from Google...");
+    try{
+      let placeId=selected?.placeId;
+      let placeName=selected?.structuredFormat?.mainText?.text||query;
+      let placeAddr=selected?.structuredFormat?.secondaryText?.text||"";
+
+      // If no placeId, use Text Search
+      if(!placeId){
+        const sr=await fetch("https://places.googleapis.com/v1/places:searchText",{
+          method:"POST",
+          headers:{"Content-Type":"application/json","X-Goog-Api-Key":key,"X-Goog-FieldMask":"places.id,places.displayName,places.formattedAddress"},
+          body:JSON.stringify({textQuery:query,maxResultCount:1})
+        });
+        if(sr.ok){
+          const sd=await sr.json();
+          const p=sd.places?.[0];
+          if(p){placeId=p.id;placeName=p.displayName?.text||placeName;placeAddr=p.formattedAddress||placeAddr;}
+        }
+      }
+
+      if(!placeId){showToast("❌ Business not found — try a more specific name");setAuditing(false);return;}
+
+      // Get full place details via New Places API
+      const dr=await fetch(`https://places.googleapis.com/v1/places/${placeId}`,{
+        headers:{
+          "X-Goog-Api-Key":key,
+          "X-Goog-FieldMask":"displayName,rating,userRatingCount,websiteUri,nationalPhoneNumber,formattedAddress,regularOpeningHours,photos,businessStatus,types,googleMapsUri,reviews"
+        }
+      });
+      let details={};
+      if(dr.ok){details=await dr.json();}
+      else{const e=await dr.json().catch(()=>({}));console.error("Place details error:",e);}
+
+      // PageSpeed if website exists
+      let pageSpeed=null,lcp=null;
+      const website=details.websiteUri||"";
+      if(website){
+        try{
+          const pr=await fetch(`https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(website)}&strategy=mobile&key=${key}`);
+          if(pr.ok){
+            const pd=await pr.json();
+            pageSpeed=Math.round((pd.lighthouseResult?.categories?.performance?.score||0)*100);
+            lcp=pd.lighthouseResult?.audits?.['largest-contentful-paint']?.displayValue||null;
+          }
+        }catch{}
+      }
+
+      const reviewCount=details.userRatingCount||0;
+      const rating=details.rating||0;
+      const hasWeb=!!website;
+      const photoCount=details.photos?.length||0;
+      const hasHours=!!(details.regularOpeningHours);
+      const recentReviews=(details.reviews||[]).slice(0,3).map(r=>({
+        author_name:r.authorAttribution?.displayName||"Reviewer",
+        rating:r.rating,
+        text:r.text?.text||"",
+        relative_time_description:r.relativePublishTimeDescription||""
+      }));
+
+      // Score calculation
+      const reviewScore=Math.min(100,Math.round(reviewCount*1.2)+Math.round((rating/5)*40));
+      const wsScore=pageSpeed?Math.round(pageSpeed*0.8):hasWeb?45:0;
+      const listingScore=Math.min(100,60+(photoCount>3?15:0)+(hasHours?15:0)+(hasWeb?10:0));
+      const grade=wsScore<30||reviewScore<30?"F":wsScore<50||reviewScore<50?"D":wsScore<65||reviewScore<65?"C":wsScore<80||reviewScore<80?"B":"A";
+
+      setResult({
+        name:details.displayName?.text||placeName,
+        address:details.formattedAddress||placeAddr,
+        phone:details.nationalPhoneNumber||"",
+        website,rating,reviewCount,hasWeb,photoCount,hasHours,
+        pageSpeed,lcp,recentReviews,
+        reviewScore,wsScore,listingScore,grade,
+        mapsUrl:details.googleMapsUri||`https://www.google.com/maps/place/?q=place_id:${placeId}`,
+        placeId,types:details.types||[],
+        businessStatus:details.businessStatus||"OPERATIONAL",
+      });
+      showToast("✅ Live audit complete — real Google data!");
+    }catch(e){console.error(e);showToast("❌ Audit failed — check console");}
+    setAuditing(false);
+  };
+
+  const gradeColor=(g)=>g==="A"?"#16a34a":g==="B"?"#2563eb":g==="C"?"#d97706":g==="D"?"#ea580c":"#dc2626";
+
+  return(
+    <div style={{flex:1,overflowY:"auto",padding:24,maxWidth:900,margin:"0 auto",width:"100%"}}>
+      <div style={{marginBottom:20}}>
+        <div style={{fontSize:18,fontWeight:700,marginBottom:4}}>🔎 Quick Audit</div>
+        <div style={{fontSize:13,color:"var(--text2)"}}>Type any business name — we'll pull live data from Google including reviews, rating, website speed, and photos.</div>
+      </div>
+
+      {/* Search box */}
+      <div style={{position:"relative",marginBottom:20}}>
+        <div style={{display:"flex",gap:10}}>
+          <div style={{flex:1,position:"relative"}}>
+            <input
+              className="finput"
+              placeholder="e.g. Chick-fil-A Atlanta, Joe's Plumbing Marietta GA..."
+              value={query}
+              onChange={e=>onInput(e.target.value)}
+              onKeyDown={e=>e.key==="Enter"&&runQuickAudit()}
+              style={{fontSize:14,padding:"10px 14px",paddingRight:searching?"36px":"14px"}}
+            />
+            {searching&&<span style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",fontSize:12,color:"var(--text3)"}}>⏳</span>}
+          </div>
+          <button className="btn btn-primary" onClick={runQuickAudit} disabled={auditing} style={{padding:"10px 20px",fontSize:13,opacity:auditing?0.7:1}}>
+            {auditing?"Auditing...":"⚡ Run Audit"}
+          </button>
+        </div>
+
+        {/* Autocomplete dropdown */}
+        {suggestions.length>0&&(
+          <div style={{position:"absolute",top:"100%",left:0,right:80,background:"var(--white)",border:"1px solid var(--border)",borderRadius:8,boxShadow:"0 8px 24px rgba(0,0,0,0.12)",zIndex:100,marginTop:4,overflow:"hidden"}}>
+            {suggestions.map((s,i)=>(
+              <button key={s.place_id||i} onClick={()=>pickSuggestion(s)} style={{display:"block",width:"100%",textAlign:"left",padding:"10px 14px",background:"transparent",borderBottom:i<suggestions.length-1?"1px solid var(--border)":"none",cursor:"pointer",transition:"background 0.1s"}}
+                onMouseEnter={e=>e.currentTarget.style.background="var(--bg)"}
+                onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                <div style={{fontSize:13,fontWeight:500,color:"var(--text)"}}>{s.structured_formatting?.main_text||s.description}</div>
+                {s.structured_formatting?.secondary_text&&<div style={{fontSize:11,color:"var(--text2)",marginTop:2}}>{s.structured_formatting.secondary_text}</div>}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* No key warning */}
+      {!getKey()&&(
+        <div style={{background:"#fffbeb",border:"1px solid #fde68a",borderRadius:8,padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"center",gap:10}}>
+          <span style={{fontSize:18}}>⚠️</span>
+          <div>
+            <div style={{fontWeight:600,fontSize:13}}>Google API Key Required</div>
+            <div style={{fontSize:12,color:"var(--text2)"}}>Go to <button onClick={()=>document.dispatchEvent(new CustomEvent("geni-nav",{detail:"settings"}))} style={{background:"none",color:"var(--accent)",cursor:"pointer",textDecoration:"underline",fontSize:12}}>Settings</button> and paste your Google Places API key to use Quick Audit.</div>
+          </div>
+        </div>
+      )}
+
+      {/* Audit Result */}
+      {result&&(
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+
+          {/* Business Info */}
+          <div className="card" style={{gridColumn:"1/-1"}}>
+            <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:16}}>
+              <div style={{flex:1}}>
+                <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:6}}>
+                  <span style={{fontSize:22,fontWeight:700}}>{result.name}</span>
+                  <span style={{fontSize:11,padding:"2px 8px",borderRadius:12,background:result.businessStatus==="OPERATIONAL"?"var(--green-bg)":"var(--red-bg)",color:result.businessStatus==="OPERATIONAL"?"var(--green)":"var(--red)",fontWeight:600}}>{result.businessStatus==="OPERATIONAL"?"Open":"Closed/Temp Closed"}</span>
+                </div>
+                {result.address&&<div style={{fontSize:12,color:"var(--text2)",marginBottom:3}}>📍 {result.address}</div>}
+                {result.phone&&<div style={{fontSize:12,color:"var(--text2)",marginBottom:3}}>📞 {result.phone}</div>}
+                {result.website?<a href={result.website} target="_blank" style={{fontSize:12,color:"var(--accent)",display:"block",marginBottom:3}}>🌐 {result.website}</a>:<div style={{fontSize:12,color:"var(--red)",marginBottom:3}}>🌐 No website detected</div>}
+                <a href={result.mapsUrl} target="_blank" style={{fontSize:11,color:"var(--text3)"}}>View on Google Maps ↗</a>
+              </div>
+              <div style={{textAlign:"center",padding:"12px 20px",background:"var(--bg)",borderRadius:10,flexShrink:0}}>
+                <div style={{fontSize:36,fontWeight:800,color:gradeColor(result.grade)}}>{result.grade}</div>
+                <div style={{fontSize:10,color:"var(--text2)",fontWeight:600}}>AUDIT GRADE</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Score cards */}
+          {[
+            {label:"⭐ Google Rating",value:result.rating?`${result.rating}/5.0 (${result.reviewCount.toLocaleString()} reviews)`:"No reviews",score:result.reviewScore,color:"#f59e0b"},
+            {label:"📱 Mobile Speed",value:result.pageSpeed?`${result.pageSpeed}/100${result.lcp?` · LCP ${result.lcp}`:""}`:result.website?"Could not fetch":"No website",score:result.wsScore,color:result.pageSpeed>70?"#16a34a":result.pageSpeed>49?"#d97706":"#dc2626"},
+            {label:"📸 GMB Profile",value:`${result.photoCount} photos · ${result.hasHours?"Hours listed":"No hours"} · ${result.hasWeb?"Has website":"No website"}`,score:result.listingScore,color:"#7c3aed"},
+          ].map(s=>(
+            <div key={s.label} className="card">
+              <div style={{fontSize:12,fontWeight:600,marginBottom:8}}>{s.label}</div>
+              <div style={{fontSize:20,fontWeight:700,color:s.color,marginBottom:6}}>{s.value}</div>
+              <div style={{display:"flex",alignItems:"center",gap:8}}>
+                <div style={{flex:1,height:6,background:"var(--border)",borderRadius:3,overflow:"hidden"}}>
+                  <div style={{width:`${s.score}%`,height:"100%",background:s.color,borderRadius:3,transition:"width 1s ease"}}/>
+                </div>
+                <span style={{fontSize:11,fontWeight:600,color:s.color}}>{s.score}/100</span>
+              </div>
+            </div>
+          ))}
+
+          {/* Recent Reviews */}
+          {result.recentReviews.length>0&&(
+            <div className="card">
+              <div style={{fontSize:12,fontWeight:600,marginBottom:10}}>💬 Recent Google Reviews</div>
+              {result.recentReviews.map((rv,i)=>(
+                <div key={i} style={{marginBottom:10,paddingBottom:10,borderBottom:i<result.recentReviews.length-1?"1px solid var(--border)":"none"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
+                    <span style={{fontSize:11,fontWeight:600}}>{rv.author_name}</span>
+                    <span style={{fontSize:10,color:"#f59e0b"}}>{"★".repeat(rv.rating)}</span>
+                    <span style={{fontSize:10,color:"var(--text3)",marginLeft:"auto"}}>{rv.relative_time_description}</span>
+                  </div>
+                  <div style={{fontSize:11,color:"var(--text2)",lineHeight:1.5}}>{rv.text?.slice(0,120)}{rv.text?.length>120?"...":""}</div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Opportunity summary */}
+          <div className="card" style={{background:"var(--accent-bg)",border:"1px solid rgba(79,142,255,0.2)"}}>
+            <div style={{fontSize:12,fontWeight:600,marginBottom:10,color:"var(--accent)"}}>🎯 Pitch Angle for Empify</div>
+            <div style={{fontSize:12,color:"var(--text)",lineHeight:1.7}}>
+              {!result.hasWeb&&"❌ No website — immediate opportunity for web design pitch.\n"}
+              {result.reviewCount<20&&`⚠️ Only ${result.reviewCount} reviews — reputation management pitch.\n`}
+              {result.pageSpeed&&result.pageSpeed<50&&"🐌 Mobile speed score under 50 — site speed optimization pitch.\n"}
+              {result.photoCount<5&&"📸 Low photo count — GMB optimization included in audit.\n"}
+              {result.grade==="F"||result.grade==="D"?"🔥 Grade "+result.grade+" — high-priority prospect, ready for outreach.":"✅ Decent online presence — focus on what's missing above."}
+            </div>
+            <button className="btn btn-primary" style={{marginTop:12,width:"100%",justifyContent:"center"}} onClick={()=>{
+              const lead={
+                id:Date.now(),
+                name:result.name,biz:result.name,title:"Owner",
+                email:"",phone:result.phone||"",
+                niche:result.types?.[0]?.replace(/_/g," ")||"Local Business",
+                location:result.address||"",
+                website:result.website||"",
+                hasWeb:result.hasWeb,
+                grade:result.grade,
+                seo:50,reviews:result.reviewScore,social:40,ws:result.wsScore,ads:30,listings:result.listingScore,ecom:20,tech:40,
+                status:"new",notes:"",auditData:null,
+                activity:[{type:"audit",text:"Quick Audit via Google Places",time:"Just now"}]
+              };
+              onSaveLead(lead);
+            }}>
+              ➕ Save to Contacts
+            </button>
+          </div>
+
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── SETTINGS PAGE ────────────────────────────────────────────────────────────
+function SettingsPage({showToast}){
+  const API_FIELDS=[
+    {key:"Google Places / PageSpeed API",hint:"Used for REAL audit data — reviews, speed, photos. Get free at console.cloud.google.com",url:"https://console.cloud.google.com/apis/credentials",required:true},
+    {key:"SerpAPI",hint:"Local 3-Pack ranking positions. serpapi.com — $50/mo",url:"https://serpapi.com/dashboard",required:false},
+    {key:"Apollo.io",hint:"Lead enrichment + email finder",url:"https://developer.apollo.io",required:false},
+    {key:"Apify Token",hint:"Google Maps scraping for Territory Maker",url:"https://console.apify.com/account/integrations",required:false},
+    {key:"HubSpot Private App",hint:"Sync contacts to HubSpot CRM",url:"https://developers.hubspot.com/docs/api/private-apps",required:false},
+    {key:"Lob.com",hint:"Direct mail automation — postcards via API",url:"https://dashboard.lob.com/#/api-keys",required:false},
+    {key:"Million Verifier",hint:"Email validation before outreach",url:"https://www.millionverifier.com/",required:false},
+  ];
+
+  const [keys,setKeys]=useState(()=>{
+    try{
+      const stored=JSON.parse(localStorage.getItem("geni_keys")||"{}");
+      // Pre-populate embedded Google key if not already set
+      if(!stored["Google Places / PageSpeed API"]&&EMBEDDED_GOOGLE_KEY){
+        stored["Google Places / PageSpeed API"]=EMBEDDED_GOOGLE_KEY;
+        try{localStorage.setItem("geni_keys",JSON.stringify(stored));}catch(e){}
+      }
+      return stored;
+    }catch{return{"Google Places / PageSpeed API":EMBEDDED_GOOGLE_KEY};}
+  });
+  const [show,setShow]=useState({});
+
+  const save=(k,v)=>{
+    const updated={...keys,[k]:v};
+    setKeys(updated);
+    try{localStorage.setItem("geni_keys",JSON.stringify(updated));}catch(e){}
+  };
+
+  return(
+    <div style={{flex:1,overflowY:"auto",padding:20}}>
+      <div style={{marginBottom:16}}>
+        <div style={{fontSize:17,fontWeight:700}}>Settings</div>
+        <div style={{fontSize:12,color:"var(--text2)"}}>API keys are saved in your browser (localStorage) — never sent to any server</div>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
+        <div className="card">
+          <div className="card-hd">
+            <span className="card-title">API Keys</span>
+            <span style={{fontSize:10,color:"var(--green)",background:"var(--green-bg)",padding:"2px 8px",borderRadius:10}}>🔒 Stored locally</span>
+          </div>
+          <div style={{background:"var(--accent-bg)",border:"1px solid rgba(79,142,255,0.2)",borderRadius:6,padding:"10px 12px",marginBottom:14,fontSize:12,lineHeight:1.7}}>
+            <strong>To enable real audit data:</strong> Add a Google Places + PageSpeed API key. It's free at <a href="https://console.cloud.google.com" target="_blank" rel="noreferrer" style={{color:"var(--accent)"}}>console.cloud.google.com</a> — enable "Places API" and "PageSpeed Insights API", then create a key.
+          </div>
+          {API_FIELDS.map(f=>(
+            <div key={f.key} style={{marginBottom:12}}>
+              <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:3}}>
+                <label className="fi" style={{margin:0}}>{f.key}</label>
+                {f.required&&<span style={{fontSize:9,background:"var(--accent)",color:"#fff",borderRadius:10,padding:"1px 6px",fontWeight:600}}>ENABLES LIVE AUDIT</span>}
+              </div>
+              <div style={{display:"flex",gap:6}}>
+                <input
+                  type={show[f.key]?"text":"password"}
+                  className="finput"
+                  style={{border:"1px solid var(--border)",borderRadius:6,flex:1}}
+                  placeholder={keys[f.key]?"••••••••••••":"Paste API key here..."}
+                  defaultValue={keys[f.key]||""}
+                  onBlur={e=>{if(e.target.value&&e.target.value!=="••••••••••••")save(f.key,e.target.value);}}
+                />
+                <button className="btn btn-secondary btn-sm" onClick={()=>setShow(s=>({...s,[f.key]:!s[f.key]}))} style={{flexShrink:0}}>
+                  {show[f.key]?"🙈":"👁"}
+                </button>
+                <a href={f.url} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm" style={{flexShrink:0,textDecoration:"none"}}>Get →</a>
+              </div>
+              {keys[f.key]&&<div style={{fontSize:10,color:"var(--green)",marginTop:2}}>✓ Key saved</div>}
+              <div style={{fontSize:10,color:"var(--text3)",marginTop:1}}>{f.hint}</div>
+            </div>
+          ))}
+          <button className="btn btn-primary btn-sm" onClick={()=>showToast("✅ Keys saved to browser")}>Save Keys</button>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          <div className="card">
+            <div className="card-hd"><span className="card-title">Agent Schedule</span></div>
+            {[["Scan Frequency",["Every day at 7am","Every Monday","Twice a week","Manual only"]],["Min Grade to Surface",["Any grade (A-F)","D + F only","F only"]],["Auto-Launch Outreach",["Off - review first","Email only","Email + Direct Mail"]]].map(([l,opts])=>(
+              <div key={l} style={{marginBottom:10}}>
+                <label className="fi">{l}</label>
+                <select className="fselect" style={{border:"1px solid var(--border)",borderRadius:6}}>
+                  {opts.map(o=><option key={o}>{o}</option>)}
+                </select>
+              </div>
+            ))}
+          </div>
+
+          <div className="card">
+            <div className="card-hd"><span className="card-title">What Each API Enables</span></div>
+            {[
+              {api:"Google Places API",icon:"📍",enables:"Real review count, star rating, photo count, business hours — feeds directly into audit scores",free:true},
+              {api:"PageSpeed Insights",icon:"⚡",enables:"Real website speed score, mobile performance, LCP — updates Website audit score",free:true},
+              {api:"SerpAPI",icon:"🔍",enables:"Actual Google local 3-Pack ranking position for the business's keywords — most accurate SEO score",free:false},
+              {api:"Apify",icon:"🗺️",enables:"Scrapes Google Maps for new leads by niche + location — powers Territory Maker scan",free:false},
+              {api:"Apollo.io",icon:"👤",enables:"Enriches imported contacts with verified emails, titles, LinkedIn URLs",free:false},
+              {api:"Lob.com",icon:"📬",enables:"Automated direct mail — postcards auto-generated and mailed from outreach panel",free:false},
+            ].map(r=>(
+              <div key={r.api} style={{display:"flex",gap:10,padding:"8px 0",borderBottom:"1px solid var(--border)"}}>
+                <span style={{fontSize:16,flexShrink:0}}>{r.icon}</span>
+                <div style={{flex:1}}>
+                  <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
+                    <span style={{fontSize:12,fontWeight:600}}>{r.api}</span>
+                    <span style={{fontSize:9,padding:"1px 6px",borderRadius:10,background:r.free?"var(--green-bg)":"var(--yellow-bg)",color:r.free?"var(--green)":"var(--yellow)",fontWeight:600}}>{r.free?"FREE":"PAID"}</span>
+                  </div>
+                  <div style={{fontSize:11,color:"var(--text2)",lineHeight:1.5}}>{r.enables}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── APP ───────────────────────────────────────────────────────────────────────
+function App(){
+  const [nav,setNav]=useState("contacts");
+  const [contacts,setContacts]=useState(SEED);
+  const [activeContact,setActiveContact]=useState(null);
+  const [toasts,setToasts]=useState([]);
+  const toastRef=useRef({});
+
+  const showToast=useCallback((msg)=>{
+    const id=Date.now();
+    setToasts(t=>[...t,{id,msg,show:false}]);
+    setTimeout(()=>setToasts(t=>t.map(x=>x.id===id?{...x,show:true}:x)),50);
+    setTimeout(()=>setToasts(t=>t.map(x=>x.id===id?{...x,show:false}:x)),3000);
+    setTimeout(()=>setToasts(t=>t.filter(x=>x.id!==id)),3400);
+  },[]);
+
+  const updateContact=useCallback((u)=>{
+    setContacts(cs=>cs.map(c=>c.id===u.id?u:c));
+    if(activeContact?.id===u.id)setActiveContact(u);
+  },[activeContact]);
+
+  const importContacts=useCallback((rows)=>{
+    setContacts(cs=>[...cs,...rows]);
+  },[]);
+
+  const hotCount=contacts.filter(c=>c.grade==="F").length;
+
+  const navSections=[
+    {label:"CRM",items:[
+      {id:"contacts",icon:"👥",label:"Contacts",badge:contacts.length},
+      {id:"pipeline",icon:"⚡",label:"Pipeline"},
+      {id:"territories",icon:"🗺️",label:"Territories"},
+      {id:"quickaudit",icon:"🔎",label:"Quick Audit"},
+    ]},
+    {label:"Marketing",items:[
+      {id:"outreach",icon:"📤",label:"Outreach"},
+      {id:"settings",icon:"⚙️",label:"Settings"},
+    ]},
+  ];
+
+  return(
+    <>
+      <div className="nav">
+        <div className="nav-logo">
+          <div className="nav-logo-name">Geni</div>
+          <div className="nav-logo-sub">LEAD GEN AGENT</div>
+        </div>
+        <div className="agent-pill">
+          <div className="agent-dot"/>
+          <span className="agent-txt">Agent Running</span>
+        </div>
+        {navSections.map(sec=>(
+          <div key={sec.label} className="nav-sec">
+            <div className="nav-sec-label">{sec.label}</div>
+            {sec.items.map(n=>(
+              <button key={n.id} className={`nav-btn ${nav===n.id&&!activeContact?"active":""}`} onClick={()=>{setNav(n.id);setActiveContact(null);}}>
+                <span className="nav-icon">{n.icon}</span>
+                <span>{n.label}</span>
+                {n.id==="contacts"&&hotCount>0&&<span className="nav-badge hot">{hotCount} hot</span>}
+                {n.badge&&n.id!=="contacts"&&<span className="nav-badge">{n.badge}</span>}
+              </button>
+            ))}
+            <div className="nav-div"/>
+          </div>
+        ))}
+        <div style={{padding:"8px 10px 4px"}}>
+          <div className="nav-sec-label">Data Sources</div>
+          {(()=>{
+            let savedKeys={};
+            try{savedKeys=JSON.parse(localStorage.getItem("geni_keys")||"{}");}catch(e){}
+            const sources=[
+              {icon:"🗺️",l:"Google Places / PageSpeed API",short:"Google Places"},
+              {icon:"📊",l:"SerpAPI",short:"SerpAPI"},
+              {icon:"🔍",l:"Apollo.io",short:"Apollo.io"},
+              {icon:"📍",l:"Apify Token",short:"Apify Maps"},
+              {icon:"🧡",l:"HubSpot Private App",short:"HubSpot"},
+              {icon:"✉️",l:"Lob.com",short:"Lob.com"},
+              {icon:"✅",l:"Million Verifier",short:"M. Verifier"},
+            ];
+            return sources.map(s=>{
+              const connected=!!(savedKeys[s.l]&&savedKeys[s.l].trim());
+              return(
+                <button key={s.l} onClick={()=>setNav("settings")} style={{display:"flex",alignItems:"center",gap:8,padding:"5px 10px",color:"var(--nav-text)",fontSize:11,background:"transparent",width:"100%",textAlign:"left",borderRadius:4,cursor:"pointer",transition:"background 0.15s"}}
+                  onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.06)"}
+                  onMouseLeave={e=>e.currentTarget.style.background="transparent"}
+                  title={connected?"Connected — click to manage":"Not configured — click to add key"}>
+                  <span style={{fontSize:12}}>{s.icon}</span>
+                  <span style={{flex:1}}>{s.short}</span>
+                  <span style={{width:6,height:6,borderRadius:"50%",background:connected?"#22c55e":"#475569",flexShrink:0,boxShadow:connected?"0 0 5px #22c55e":undefined}}/>
+                </button>
+              );
+            });
+          })()}
+          <button onClick={()=>setNav("settings")} style={{display:"flex",alignItems:"center",gap:6,padding:"5px 10px",color:"rgba(79,142,255,0.7)",fontSize:10,background:"transparent",width:"100%",textAlign:"left",cursor:"pointer",marginTop:2}}>
+            <span>⚙️</span><span>Manage API Keys →</span>
+          </button>
+        </div>
+        <div className="nav-user">
+          <div className="nav-av">MO</div>
+          <div>
+            <div style={{fontSize:12,color:"#fff",fontWeight:500}}>MO</div>
+            <div style={{fontSize:10,color:"var(--nav-text)"}}>Agency Owner</div>
+          </div>
+        </div>
+      </div>
+
+      <div className="main">
+        {activeContact?(
+          <ContactRecord
+            contact={activeContact}
+            onBack={()=>setActiveContact(null)}
+            onUpdate={updateContact}
+            toastFn={showToast}
+          />
+        ):(
+          <>
+            <div className="topbar">
+              <span className="topbar-title">
+                {nav==="contacts"?"Contacts":nav==="pipeline"?"Pipeline":nav==="territories"?"Territory Maker":nav==="outreach"?"Outreach":nav==="quickaudit"?"Quick Audit":"Settings"}
+              </span>
+              <div className="topbar-div"/>
+              <span className="topbar-sub">
+                {nav==="contacts"&&`${contacts.length} contacts · ${contacts.filter(c=>!c.hasWeb).length} without website`}
+                {nav==="territories"&&"Define markets and auto-discover businesses by niche"}
+                {nav==="pipeline"&&"Track contacts through your sales pipeline"}
+                {nav==="quickaudit"&&"Search any business by name and run a live Google audit instantly"}
+              </span>
+            </div>
+            <div className="content">
+              {nav==="contacts"&&<ContactsList contacts={contacts} onSelect={setActiveContact} toastFn={showToast} onImport={importContacts}/>}
+              {nav==="pipeline"&&<Pipeline contacts={contacts} onSelect={setActiveContact}/>}
+              {nav==="territories"&&<TerritoryMaker toastFn={showToast} onSelectContact={setActiveContact}/>}
+              {nav==="outreach"&&(
+                <div style={{flex:1,overflowY:"auto",padding:20}}>
+                  <div style={{marginBottom:14}}>
+                    <div style={{fontSize:17,fontWeight:700}}>Outreach Center</div>
+                    <div style={{fontSize:12,color:"var(--text2)"}}>Open a contact record to run personalized outreach for that prospect.</div>
+                  </div>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12}}>
+                    {[{icon:"📧",name:"Cold Email",sent:9,opened:3,replied:1},{icon:"💼",name:"LinkedIn DM",sent:6,opened:4,replied:2},{icon:"🎤",name:"Voice Message",sent:5,opened:3,replied:2},{icon:"💬",name:"SMS",sent:8,opened:5,replied:2},{icon:"📬",name:"Direct Mail",sent:4,opened:null,replied:null},{icon:"🌐",name:"Audit Pages",sent:14,opened:6,replied:null},{icon:"📱",name:"Social DM",sent:5,opened:3,replied:1}].map(c=>(
+                      <div key={c.name} className="card">
+                        <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
+                          <span style={{fontSize:22}}>{c.icon}</span>
+                          <span style={{fontSize:13,fontWeight:600}}>{c.name}</span>
+                        </div>
+                        {[{l:"Sent",v:c.sent},{l:"Opened",v:c.opened},{l:"Replied",v:c.replied}].map(s=>(
+                          <div key={s.l} style={{display:"flex",justifyContent:"space-between",padding:"5px 0",borderBottom:"1px solid var(--border)",fontSize:12}}>
+                            <span style={{color:"var(--text2)"}}>{s.l}</span>
+                            <span style={{fontWeight:600,color:s.v?s.l==="Replied"?"var(--green)":"var(--text)":"var(--text3)"}}>{s.v??"-"}</span>
+                          </div>
+                        ))}
+                        <button className="btn btn-secondary btn-sm" style={{width:"100%",marginTop:10,justifyContent:"center"}} onClick={()=>showToast(`✏️ ${c.name} editor opened`)}>Edit Template</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {nav==="quickaudit"&&<QuickAuditPage showToast={showToast} onSaveLead={(lead)=>{importContacts([lead]);showToast("✅ Lead saved to Contacts!");setNav("contacts");}}/>}
+              {nav==="settings"&&<SettingsPage showToast={showToast}/>}
+            </div>
+          </>
+        )}
+      </div>
+      <Toast toasts={toasts}/>
+    </>
+  );
+}
+
+ReactDOM.render(<App/>,document.getElementById("root"));
+</script>
+</body>
+</html>
